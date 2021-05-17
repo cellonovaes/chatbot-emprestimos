@@ -52,3 +52,8 @@ Thumbs.db
 
 docs
 
+/chatroom/.cache/
+/chatbot/events.db
+/chatbot/events.db-shm
+/chatbot/events.db-wal
+/chatbot/rasa.db

@@ -1,0 +1,41 @@
+version: "2.0"
+
+stories:
+- story: cumprimentar - happy path
+  steps:
+  - intent: cumprimentar
+  - action: utter_cumprimentar
+  - checkpoint: check_cumprimento
+
+- story: ler nome
+  steps:
+  - checkpoint: check_cumprimento
+  - action: utter_perguntar_nome
+  - action: form_usuario
+  - checkpoint: check_nome_ok
+
+- story: selecionar novo emprestimo
+  steps:
+  - checkpoint: check_nome_ok
+  - action: utter_tipo_de_antendimento
+  - intent: emprestimo_novo
+  - checkpoint: check_emprestimo_novo
+
+- story: selecionar emprestimo existente
+  steps:
+  - checkpoint: check_nome_ok
+  - action: utter_tipo_de_antendimento
+  - intent: emprestimo_existente
+  - checkpoint: check_emprestimo_existente
+
+- story: simular novo emprestimo
+  steps:
+  - checkpoint: check_emprestimo_novo
+  - action: utter_finalidade_do_emprestimo
+
+
+- story: simular emprestimo existente
+  steps:
+  - checkpoint: check_emprestimo_existente
+  - action: utter_despedir
+
