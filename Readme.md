@@ -8,15 +8,15 @@
 
 ### <a name="escopo"></a>Escopo
 
-Este projeto visa apresentar uma arquitetura de chatbot escalavél, flexivél e resiliente, capaz de processar um alto volume de dúvidass e estar preparado para aumentos rápidos de demanda.
+Este projeto visa apresentar uma arquitetura de chatbot escalavél, flexivel e resiliente, capaz de processar um alto volume de dúvidass e estar preparado para aumentos rápidos de demanda.
 
 Devem estar contemplados o transbordo do atendimento para atendentes humanos, caso necesssário, assim como ações que requeiram a consulta à serviços externos, consulta em bases de dados, o uso de custom forms, e também a utilização de fallback actions.
 
-O estudo de caso selecionado foi um **Chatbot** para atendimento de uma **plataforma de emprestimos** online, sendo que ele deve ser capaz de sanar as **principais dúvidas** dos visitantes.
+O estudo de caso selecionado foi um chatbot para atendimento de uma plataforma de emprestimos online, sendo que ele deve ser capaz de sanar as principais dúvidas dos visitantes.
 
 Adicionalmente será tratado o transbordo do atendimento para o setor de informações, o setor de negociações, e também o setor de vendas.
 
-Para entender alguns termos e as modalidades de empréstimos foi consultada a plataforma de empréstimos Geru (https://www.geru.com.br).
+Para entender alguns termos e as modalidades de empréstimos foi consultada a plataforma de empréstimos [Geru](https://www.geru.com.br).
 
 
 
@@ -26,9 +26,9 @@ Para entender alguns termos e as modalidades de empréstimos foi consultada a pl
 
 ### <a name="instalacao"></a> Instalação e Execução
 
-Este chatbot de demonstração foi construido com base na plataforma Rasa (https://rasa.com/), utilizando alguns recursos disponibilizados no exemplo Financial-Demo da RasaHQ (https://github.com/RasaHQ/financial-demo), no Rassa Boilerplate (https://github.com/lappis-unb/rasa-ptbr-boilerplate).
+Este chatbot de demonstração foi construido com base na plataforma [Rasa](https://rasa.com/), utilizando alguns recursos disponibilizados no exemplo [Financial-Demo da RasaHQ](https://github.com/RasaHQ/financial-demo), no [Rassa Boilerplate](https://github.com/lappis-unb/rasa-ptbr-boilerplate).
 
-Para testar o chatbot foi utilizado o cliente Chatroom da RasaHQ (https://github.com/RasaHQ/chatroom). 
+Para testar o chatbot foi utilizado o cliente [Chatroom da RasaHQ](https://github.com/RasaHQ/chatroom). 
 
 <img src="readme/chatroom.png" alt="Chatroom" width="800"/>
 
@@ -55,7 +55,7 @@ A arquitetura apresentada nesta seção foi definida considerando que as mensage
 
 Conforme as mensagens chegam, elas são inseridas em uma fila de entrada, o que evita indisponibilidade do sistema em situações em que todas as instâncias disponíveis do chatbot estejam ocupadas.
 
-Existem diversas alternativas para se implementar esse tipo de fila, porém a AWS SQS (https://aws.amazon.com/pt/sqs/) parece uma ótima alternativa por apresentar diversos recursos úteis, como a garantia de entrega das mensagens, fácil gerenciamento de múltiplas filas, e mesmo a possibilidade de marcar uma mensagem como "hidden" durante o atendimento e removida após a resposta ser gerada. 
+Existem diversas alternativas para se implementar esse tipo de fila, porém a AWS SQS [(https://aws.amazon.com/pt/sqs)](https://aws.amazon.com/pt/sqs) parece uma ótima alternativa por apresentar diversos recursos úteis, como a garantia de entrega das mensagens, fácil gerenciamento de múltiplas filas, e mesmo a possibilidade de marcar uma mensagem como "hidden" durante o atendimento e removida após a resposta ser gerada. 
 
 Este último recurso pode ser utilizado de forma criativa como mecanismo inteligênte de lock, pois é possivel definir um timeout para o processamento de uma mensagem, de forma que ele volta a ser visivél na fila caso não um chatbot não consiga processa-la em tempo hábil por qualquer motivo.
 
@@ -84,9 +84,9 @@ A arquitetura desscrita possibilita algumass formas diferentes para tratar a tra
 * Encaminhamento para outro canal
 * Realizar o atendimento híbrido no mesmo canal
 
-**Obs**: algumas idéias dessa seção foram baseadas no artigo: 
+Obs: algumas idéias dessa seção foram baseadas no artigo: 
 
-* https://www.take.net/blog/chatbots/atendimento-humano-em-chatbots
+* [https://www.take.net/blog/chatbots/atendimento-humano-em-chatbots](https://www.take.net/blog/chatbots/atendimento-humano-em-chatbots)
 
 
 
@@ -183,7 +183,7 @@ rules:
 
 Além de sentenças fora do escopo também podem ocorrer casos em que o módulo de NLU não compreende, com grau de confiabilidade suficiente, o que foi dito pelo usuário. Nesses casos é mais interessante assumir que o chatbot não entender o que o visitante disse do que assumir o risco re realizar uma ação incorreta.
 
-Esse tratamento é feito pela política de fallback que, se bem utilizada, pode ajudar a promover a continuidade da conversa nesses casos. Nesse projeto foram utilizadas as recomendação contidas na documentação da Rasa sobre como tratar o fallback (https://rasa.com/docs/rasa/fallback-handoff/).
+Esse tratamento é feito pela política de fallback que, se bem utilizada, pode ajudar a promover a continuidade da conversa nesses casos. Nesse projeto foram utilizadas as recomendação contidas na documentação da Rasa sobre como tratar o fallback [(https://rasa.com/docs/rasa/fallback-handoff)](https://rasa.com/docs/rasa/fallback-handoff/).
 
 Para configurar esse **fallback de 2 estágios** foram seguidos os passos:
 
