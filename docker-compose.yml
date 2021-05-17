@@ -1,0 +1,48 @@
+version: '3'
+networks: {rasa-network: {}}
+
+services:
+
+  chatbot:
+    container_name: chatbot
+    ports:
+      - "5002:5002"
+      - "5005:5005"
+    volumes:
+    - ./chatbot:/app/chatbot
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-chatbot
+
+  actions:
+    container_name: actions
+    ports:
+      - "5006:5006"
+    networks: ['rasa-network']
+    volumes:
+    - ./chatbot:/app/chatbot
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-actions
+
+  chatroom:
+    container_name: chatroom
+    ports:
+      - "8080:8080"
+    networks: ['rasa-network']
+    volumes:
+    - ./chatroom:/app/chatroom
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-chatroom
+    command: ["sh","-c","yarn serve"]
+
+  duckling:
+    container_name: duckling
+    ports:
+      - "8000:8000"
+    networks: ['rasa-network']
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-duckling
+

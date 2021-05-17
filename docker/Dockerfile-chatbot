@@ -1,0 +1,11 @@
+FROM python:3.8
+WORKDIR /app/chatbot
+EXPOSE 5002
+EXPOSE 5005
+RUN python -m pip install --upgrade pip
+RUN python -m pip install rasa[spacy]==2.4.0
+RUN python -m pip install rasa-sdk==2.4.0
+RUN python -m pip install --upgrade pip==20.2
+RUN python -m pip install rasa-x --extra-index-url https://pypi.rasa.com/simple
+CMD ["rasa", "x", "--enable-api", "-p", "5003", "--cors", "*", "--no-prompt"]
+
