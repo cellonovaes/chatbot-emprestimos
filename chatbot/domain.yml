@@ -93,8 +93,7 @@ slots:
 responses:
   utter_fallback:
   - text: |
-      Desculpe, ainda não sei falar sobre isso ou talvez não consegui entender direito
-      Você pode perguntar de novo de outro jeito?
+      Eu não consegui entender. Poderia escrever de outra forma?
   - text: |
       Hummmm... Não sei se entendi. Pode escrever de outra forma?
   - text: |
@@ -312,8 +311,13 @@ responses:
     - payload: emprestimo_novo
       title: Novo empréstimo
     text: Você quer tirar dúvidas sobe um empréstimo já realizado ou sobre um novo empréstimo?
+
+  utter_fora_do_escopo:
+    - text: Me desculpe, mas realmente precisamos continuar nosso atendimento.
+
 actions:
 - action_teste
+- fallback_action
 forms:
   login_form:
     required_slots: {}

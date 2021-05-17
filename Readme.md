@@ -1,22 +1,24 @@
 # Desafio Serasa
 
 ## Um chatbot para atendimento de dúvidas em uma plataforma de empréstimos
+[Escopo](#escopo) | [Instalação](#instalacao) | [Arquitetura](#arquitetura) | [Fallbacks](#fallbacks) | [Transbordo](#transbordo) | [Ações](#actions)| [Forms](#forms) | [Stories](#stories)| [Conclusão](#conclusao)
 
 
 
-### Escopo
+
+### <a name="escopo"></a>Escopo
 
 Este projeto visa apresentar uma arquitetura de chatbot escalavél, flexivél e resiliente, capaz de processar um alto volume de dúvidass e estar preparado para aumentos rápidos de demanda.
 
 Devem estar contemplados o transbordo do atendimento para atendentes humanos, caso necesssário, assim como ações que requeiram a consulta à serviços externos, consulta em bases de dados, o uso de custom forms, e também a utilização de fallback actions.
 
-O estudo de caso selecionado foi um Chatbot para atendimento de uma plataforma de emprestimos online, sendo que ele deve ser capaz de sanar as principais dúvidas dos visitantes.
+O estudo de caso selecionado foi um **Chatbot** para atendimento de uma **plataforma de emprestimos** online, sendo que ele deve ser capaz de sanar as **principais dúvidas** dos visitantes.
 
 Adicionalmente será tratado o transbordo do atendimento para o setor de informações, o setor de negociações, e também o setor de vendas.
 
+Para entender alguns termos e as modalidades de empréstimos foi consultada a plataforma de empréstimos Geru (https://www.geru.com.br).
 
-
-### Instalação e Execução 
+### <a name="instalacao"></a> Instalação e Execução
 
 Este chatbot de demonstração foi construido com base na plataforma Rasa (https://rasa.com/), utilizando alguns recursos disponibilizados no exemplo Financial-Demo da RasaHQ (https://github.com/RasaHQ/financial-demo), no Rassa Boilerplate (https://github.com/lappis-unb/rasa-ptbr-boilerplate).
 
@@ -35,7 +37,7 @@ Após isso o cliente estará disponível no endereço:
 http://127.0.0.1:8081
 ```
 
-### Arquitetura
+### <a name="arquitetura"></a>Arquitetura
 A arquitetura apresentada nesta seção foi definida considerando que as mensagens chegarão por meio da infraestrutura do Whatsapp, porém tudo foi pensado para ser independente de plataforma e tecnologia.
 
 Conforme as mensagens chegam, elas são inseridas em uma fila de entrada, o que evita indisponibilidade do sistema em situações em que todas as instâncias disponíveis do chatbot estejam ocupadas.
@@ -56,7 +58,7 @@ Outro ponto relacionado com a disponibilidade do serviço é a segunda fila de m
 
 Por questões práticas de tempo esta arquitetura não foi implementada no chatbot de demonstração.
 
-### Alternativas para realizar o Transbordo
+### <a name="transbordo"></a>Alternativas para realizar o Transbordo
 
 A arquitetura desscrita possibilita algumass formas diferentes para tratar a transição do antendimento entre um chatbot e um atendente humano. A seguir serão descritas duas dela.
 
@@ -73,7 +75,7 @@ A arquitetura desscrita possibilita algumass formas diferentes para tratar a tra
 
 Embora eu ainda não esteja certo da técnica atualmente utilzada na Serasa, acredito que se enquadre nesa categoria. 
 
-Essa técnica é interessante pois possibilita liberar o canal de atendimento ao redirecionar o usuário para um canal externo como o telefone ou email. 
+Essa técnica é interessante pois possibilita liberar o canal de atendimento ao redirecionar o usuário para um canal externo como o telefone ou email. Isso funciona bem para os casos em que o atendente humano finaliza a conversa quando termina de atender o cliente.
 
 <img src="readme/transbordo_01.jpg" alt="Transbordo" width="300"/>
 
@@ -89,8 +91,7 @@ Todavia existem algumas formas de incrementar esssa abordagem, como a criação 
 
 Essa estratégia é a que parece ressultar em melhor experiência do usuário, pois permite que seja utilizado o mesmo canal de comunicação o tempo todo. Tanto ao transferir do chatbot para o atendente, transferir de uma atendente para o outro, e transferir do atendente de volta para o chatbot.
 
-<img src="readme/transbordo_02.jpg" alt="Transbordo" width="300"/>
-<img src="readme/transbordo_03.jpg" alt="Transbordo" width="300"/>
+<img src="readme/transbordo_02.jpg" alt="Transbordo" width="300"/><img src="readme/transbordo_03.jpg" alt="Transbordo" width="300"/>
 
 Outra vantagem é que o contexto é presenvado a cada transferência, de forma que o usuário não precissa repetir as informações para cada novo atendente.
 
@@ -98,7 +99,7 @@ Todavia é uma estratégia mais difícil de implementar pois exige um maior grau
 
 Uma forma de implementar isso seria por meio da persistência de contexto um sistema de lock compartilhado com infomações adicionais descrevendo a cadeia de atendimento. Dessa forma é possível retornar o atendimento para qualquer chatbot ou atendente que participou da conversa com o usuário.
 
-### Retrieval Actions e External Events
+### <a name="actions"></a>Retrieval Actions e External Events
 
 Para a implementação do chatbot foi necessário definir algumas ações relacionadas com a recuperação de informação e o transbordo dos atendimentos.
 
@@ -111,16 +112,16 @@ Durante o fluxo da conversa pode ser necessário que o chatbot dispare uma ou ma
 * **Gerar simulação:** é feita uma chamada de função para calcular o valor de cada parcela em uma simulação de empréstimo.
 * **Transbordo:** faz uma chamada no sistema para transferir o atendimento para um atendente humano. (para simular isso foi criada uma ação para imprimir as mensagens de Inicio e Final do atendimento humano, e retornar para o fluxo da conversa)
 
-### Fallbacks e Out of Scope
+### <a name="fallbacks"></a>Out of Scope e Fallbacks
 
 A continuidade da conversa é algo essencial para uma boa experiência do usuário. Dessa forma, devemos evitar a quebra do dialogo por conta de perguntas fora de contexto que o usuário possa fazer, assim como por conta de falha de entendimento ou baixa confiabilidade no reconhecimento de intents.
 
-Para tratar as perguntas e comentários fora de contexto foi criada a intent **out_of_scope**, que será treinada para reconhecer piadas, testes e perguntas fora do contexto da platarma ded emprestimos.
+Para tratar as perguntas e comentários fora de contexto foi criada a intent **fora_do_escopo**, que será treinada para reconhecer piadas, testes e perguntas fora do contexto da platarma ded emprestimos.
 
 ```
 nlu.yml
 nlu:
-- intent: out_of_scope
+- intent: fora_do_escopo
   examples: |
     - Você entrega comida?
     - Chame um Uber pra mim
@@ -129,54 +130,152 @@ nlu:
     - ...
 ```
 
-Para a intent **out_of_escope** será definida uma resposta padrão, solicitando que o visitante retorne ao fluxo da conversa:
+Para a intent **fora_do_escopo** será definida uma resposta padrão, solicitando que o visitante retorne ao fluxo da conversa:
 
 ```
 domain.yml
 responses:
-  utter_out_of_scope:
+  utter_fora_do_escopo:
   - text: Me desculpe, mas realmente precisamos continuar nosso atendimento.
 ```
 
-Finalmente, foi criada uma regra para exibir a mensagem padrão toda vez que é detectada a intent **out_of_scope**:
+Finalmente, foi criada uma regra para exibir a mensagem padrão toda vez que é detectada a intent **fora_do_escopo**:
 
 ```
 rules.yml
 rules:
-- rule: out-of-scope
+- rule: fora-do-escopo
   steps:
-  - intent: out_of_scope
-  - action: utter_out_of_scope
+  - intent: fora_do_escopo
+  - action: utter_fora_do_escopo
 ```
 
 
 
-Por sua vez, os fallbacks precisam ser tratados dentro do contexto. Tratando o fallback dentro do contexto da conversa é possível instruir o visitante sobre como deve responder as perguntas, aumentando a chance de satisfação ao final do atendimento.
+Além de sentenças fora do escopo também podem ocorrer casos em que o módulo de NLU não compreende, com grau de confiabilidade suficiente, o que foi dito pelo usuário. Nesses casos é mais interessante assumir que o chatbot não entender o que o visitante disse do que assumir o risco re realizar uma ação incorreta.
 
-TO-DO
+Esse tratamento é feito pela política de fallback que, se bem utilizada, pode ajudar a promover a continuidade da conversa nesses casos. Nesse projeto foram utilizadas as recomendação contidas na documentação da Rasa sobre como tratar o fallback (https://rasa.com/docs/rasa/fallback-handoff/).
+
+Para configurar esse **fallback de 2 estágios** foram seguidos os passos:
+
+1.  foi configurado o **FallbackClassifier** e foi adicionada a **RulePolicy** :
+
+```
+config.yml
+pipeline:
+- name: FallbackClassifier
+  threshold: 0.7
+  
+policies:
+- name: RulePolicy
+```
+
+2. Foi definida a mensagem que será apresentada ao visitante em caso de fallback. A estratégia adotada é solicitar que ele tente repetir sua sentença de uma outra forma:
+
+```
+domain.yml
+responses:
+  utter_fallback:
+  - text: Eu não consegui entender. Poderia escrever de outra forma?
+```
+
+3. Foi criada a ação customizada que exibe a **utter_fallback** e retorna para o diálogo anterior, dando a oportunidade do usuário tentar se expressar novamente de uma outra forma.
+
+```
+actions.py
+from typing import Any, Text, Dict, List
+from rasa_sdk import Action, Tracker
+from rasa_sdk.events import UserUtteranceReverted
+from rasa_sdk.executor import CollectingDispatcher
+
+class ActionDefaultFallback(Action):
+    def name(self) -> Text:
+        return fallback_action
+
+    async def run(
+        self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> List[Dict[Text, Any]]:
+        dispatcher.utter_message(template="utter_fallback")
+        return [UserUtteranceReverted()]
+```
+
+Por fim, foi criada uma regra para exibir esta mensagem toda vez que ocorre um fallback:
+
+```
+rules.yml
+rules:
+- rule: Pede para o usuário refazer a sentença em caso de fallback
+  steps:
+  - intent: nlu_fallback
+  - action: fallback_action
+  - active_loop: fallback_action
+```
 
 
 
-### Forms, Slots e Botões
+### <a name="forms"></a>Forms, Slots e Botões
 
 Durante o fluxo da conversa são necessários alguns dados como o nome e cpf do usuário, e em partes específicas são necessários ainda outros dados como o valor do empréstimo solicitado e o número desejado de parcelas.
 
 Para capturar esses dados de uma maneira estruturada foram utilizados forms, para popular slots que são as nossas variáveis.
 
-Quando as possibilidades a serem escolhidas são limitadas e bem definidas, o uso de botões evita problemas desnecessários de comunicação.
+
 
 TO-DO
 
-### Workflow dos Diálogos
+
+
+Quando as possibilidades a serem escolhidas são limitadas e bem definidas, o uso de botões evita problemas desnecessários de comunicação pois deixa clara para o chatbot qual a intent do usuário. Nesse estudo de caso isso é usado quando é necessário saber se o visitante quer falar sobre um novo empréstimo ou um empréstimo já existente:
+
+```
+  utter_tipo_de_antendimento:
+  - buttons:
+    - payload: emprestimo_novo
+      title: Empréstimo já realizado
+    - payload: emprestimo_novo
+      title: Novo empréstimo
+    text: Você quer tirar dúvidas sobe um empréstimo já realizado ou sobre um novo empréstimo?
+```
+
+Também foi possível utilizar os botões para preencher slot com valores específicos, como para preencher a finalidade do emprestimo:
+
+```
+  utter_finalidade_do_emprestimo:
+  - buttons:
+    - payload: /escolhe_finalidade{"finalidade": "refinanciar_divida"}
+      title: Refinanciar uma dívida
+    - payload: /escolhe_finalidade{"finalidade": "investir_em_negocio"}
+      title: Investir em um negócio
+    - payload: /escolhe_finalidade{"finalidade": "fazer_reforma"}
+      title: Fazer uma reforma
+    - payload: /escolhe_finalidade{"finalidade": "pagar_cartao"}
+      title: Pagar cartão de crédito
+    - payload: /escolhe_finalidade{"finalidade": "comprar_carro"}
+      title: Comprar um carro
+    - payload: /escolhe_finalidade{"finalidade": "casamento"}
+      title: Casamento
+    - payload: /escolhe_finalidade{"finalidade": "fazer_compra"}
+      title: Fazer uma compra
+    - payload: /escolhe_finalidade{"finalidade": "tirar_ferias"}
+      title: Tirar férias
+    - payload: /escolhe_finalidade{"finalidade": "fazer_mudanca"}
+      title: Fazer mudança
+    - payload: /escolhe_finalidade{"finalidade": "outro"}
+      title: Outro motivo
+    text: Para qual finalidade você quer o empréstimo?
+```
+
+
+### <a name="stories"></a>Descrição das Stories
 
 
 
 A imagem a seguir ilustra o fluxo da conversa durante a execução do chatbot. Vale resaltar que na imagem não estão representadas as exeções ou ações de fallback, apenas a visão geral dos possíveis fluxos normais da conversa.
 
 <img src="readme/dialog_workflow.png" alt="Diálogos" width="800"/>
-
-
-### Descrição das Stories
 
 
 
@@ -220,7 +319,7 @@ dasda
 
 
 
-### Conclusão
+### <a name="conclusao"></a>Conclusão
 
 Apesar de todos os possíveis fuxos de atendimento terem sido apressentados, apena alguns deles foram implementados nessa verssão de demonstração.
 
