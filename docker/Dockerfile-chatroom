@@ -3,7 +3,7 @@ WORKDIR /app/chatroom
 EXPOSE 8080
 RUN yarn install
 RUN yarn upgrade
-CMD ["sh","-c","yarn build && yarn watch"]
+CMD ["sh","-c","yarn build && yarn serve"]
 
 
 

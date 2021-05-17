@@ -69,7 +69,7 @@ Por meio dessa mesma técnica é possível realizar o transbordo do atendimento,
 
 Outro ponto relacionado com a disponibilidade do serviço é a segunda fila de mensagens, utilizadas quando um atendimento é transferido para um atendente humano. Quando isso ocorre o próximo atendente disponível (no departamento especificado) receberá o token da conversa e o conector passa enviar as mensagens direto para o novo canal. Caso o atendente transfira o visitante novamente para o bot, o conector passa a novamente a direcionar as mensagens daquele atendimento para a fila de entrada.
 
-Por questões práticas de tempo esta arquitetura não foi implementada no chatbot de demonstração.
+Por questões práticas de tempo e recursos esta arquitetura não foi implementada no chatbot de demonstração.
 
 
 
@@ -253,27 +253,23 @@ rules:
 
 Durante o fluxo da conversa são necessários alguns dados como o nome e cpf do usuário, e em partes específicas são necessários ainda outros dados como o valor do empréstimo solicitado e o número desejado de parcelas.
 
-Para capturar esses dados de uma maneira estruturada foram utilizados forms, para popular slots que são as nossas variáveis.
+Os forms são ferramentas muito boas para capturar esses dados, perguntando os dados requeridos, um por um, até que estejam preenchidos. Durante a aplicação de um form, caso o usuário não forneça um valor condizente com o dado solicitado, a pergunta é repetida até que seja fornecido um valor aceitável.
 
-
-
-TO-DO
-
-
+Os dados capturados são armazenados em slots, que se comportam de forma semelhante às variaveis, de maneira que se pode definir um slot para armazenar cada um dos dados. Os forms podem ser ainda mais efetivos se usados em conjunto com botões quando se espera respostas fechadas.
 
 Quando as possibilidades a serem escolhidas são limitadas e bem definidas, o uso de botões evita problemas desnecessários de comunicação pois deixa clara para o chatbot qual a intent do usuário. Nesse estudo de caso isso é usado quando é necessário saber se o visitante quer falar sobre um novo empréstimo ou um empréstimo já existente:
 
 ```
   utter_tipo_de_antendimento:
   - buttons:
-    - payload: emprestimo_novo
+    - payload: emprestimo_existente
       title: Empréstimo já realizado
     - payload: emprestimo_novo
       title: Novo empréstimo
     text: Você quer tirar dúvidas sobe um empréstimo já realizado ou sobre um novo empréstimo?
 ```
 
-Também foi possível utilizar os botões para preencher slot com valores específicos, como para preencher a finalidade do emprestimo:
+Também foi possível utilizar os botões para preencher slot com valores específicos. Sendo assim, é possível utilizar os botões em conjunto com os forms para preencher de maneira mais efetiva os slots que possuam respostas restritas a um conjunto finito de valores, como no caso da finalidade do empréstimo:
 
 ```
   utter_finalidade_do_emprestimo:
@@ -333,41 +329,31 @@ TO-DO
 
 ##### Story A1: um visitante deseja informações sobre os parcelas e taxas para um empréstimo já sabendo o valor desejado e prazos desejados, mas não deseja contratar o empréstimo no momento.
 
-dasda
+TO-DO
 
 
 
 ##### Story A2: um visitante deseja informações sobre os parcelas e taxas para um empréstimo, porém ele deseja simular diferentes valores e prazos. Porém ele não deseja contratar o empréstimo no momento.
 
-dasda
+TO-DO
 
 
 
 ##### Story A3: um visitante deseja informações sobre o saldo devedor e taxa juros de um empréstimo que ele já contratou.
 
-dasda
+TO-DO
 
 
 
 ##### Story A4: um visitante deseja informações sobre o saldo devedor e taxa juros de multiplos empréstimos que ele já contratou.
 
-dasda
+TO-DO
 
 
 
 ##### Story A5: um visitante deseja informações sobre o saldo devedor e taxa juros de um empréstimo que ele já contratou. Após receber as informações ele decide contratar um novo empréstimo para quitar a dívida.
 
-dasda
-
-
-
-
-
-
-
-### <a name="conclusao"></a>Conclusão
-
-Apesar de todos os possíveis fuxos de atendimento terem sido apressentados, apena alguns deles foram implementados nessa verssão de demonstração.
-
 TO-DO
+
+
 
