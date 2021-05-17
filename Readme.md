@@ -18,6 +18,12 @@ Adicionalmente será tratado o transbordo do atendimento para o setor de informa
 
 Para entender alguns termos e as modalidades de empréstimos foi consultada a plataforma de empréstimos Geru (https://www.geru.com.br).
 
+
+
+
+
+
+
 ### <a name="instalacao"></a> Instalação e Execução
 
 Este chatbot de demonstração foi construido com base na plataforma Rasa (https://rasa.com/), utilizando alguns recursos disponibilizados no exemplo Financial-Demo da RasaHQ (https://github.com/RasaHQ/financial-demo), no Rassa Boilerplate (https://github.com/lappis-unb/rasa-ptbr-boilerplate).
@@ -37,7 +43,14 @@ Após isso o cliente estará disponível no endereço:
 http://127.0.0.1:8081
 ```
 
+
+
+
+
+
+
 ### <a name="arquitetura"></a>Arquitetura
+
 A arquitetura apresentada nesta seção foi definida considerando que as mensagens chegarão por meio da infraestrutura do Whatsapp, porém tudo foi pensado para ser independente de plataforma e tecnologia.
 
 Conforme as mensagens chegam, elas são inseridas em uma fila de entrada, o que evita indisponibilidade do sistema em situações em que todas as instâncias disponíveis do chatbot estejam ocupadas.
@@ -58,6 +71,12 @@ Outro ponto relacionado com a disponibilidade do serviço é a segunda fila de m
 
 Por questões práticas de tempo esta arquitetura não foi implementada no chatbot de demonstração.
 
+
+
+
+
+
+
 ### <a name="transbordo"></a>Alternativas para realizar o Transbordo
 
 A arquitetura desscrita possibilita algumass formas diferentes para tratar a transição do antendimento entre um chatbot e um atendente humano. A seguir serão descritas duas dela.
@@ -68,6 +87,8 @@ A arquitetura desscrita possibilita algumass formas diferentes para tratar a tra
 **Obs**: algumas idéias dessa seção foram baseadas no artigo: 
 
 * https://www.take.net/blog/chatbots/atendimento-humano-em-chatbots
+
+
 
 
 
@@ -84,6 +105,8 @@ Essa técnica é interessante pois possibilita liberar o canal de atendimento ao
 A desvantagem nessse casso fica por conta da experiência do usuário por ter que utilizar um canal adicional de comunicação, e também por conta do atendente humano perder o contexto da mensagem.
 
 Todavia existem algumas formas de incrementar esssa abordagem, como a criação de external actions para persistir temporáriamente e enviar (ou tornar acesível) o contexto para o próximo atendente.
+
+
 
 
 
@@ -111,6 +134,12 @@ Durante o fluxo da conversa pode ser necessário que o chatbot dispare uma ou ma
 * **Consulta de crédito:** consultar um webservice para recuperar o score de crédito de um visitante. (para simular isso foi utilizazda uma busca no banco de dados)
 * **Gerar simulação:** é feita uma chamada de função para calcular o valor de cada parcela em uma simulação de empréstimo.
 * **Transbordo:** faz uma chamada no sistema para transferir o atendimento para um atendente humano. (para simular isso foi criada uma ação para imprimir as mensagens de Inicio e Final do atendimento humano, e retornar para o fluxo da conversa)
+
+
+
+
+
+
 
 ### <a name="fallbacks"></a>Out of Scope e Fallbacks
 
@@ -216,6 +245,10 @@ rules:
 
 
 
+
+
+
+
 ### <a name="forms"></a>Forms, Slots e Botões
 
 Durante o fluxo da conversa são necessários alguns dados como o nome e cpf do usuário, e em partes específicas são necessários ainda outros dados como o valor do empréstimo solicitado e o número desejado de parcelas.
@@ -269,6 +302,11 @@ Também foi possível utilizar os botões para preencher slot com valores espec�
 ```
 
 
+
+
+
+
+
 ### <a name="stories"></a>Descrição das Stories
 
 
@@ -283,11 +321,15 @@ A seguir serão listadas e descritas cada uma das stories previstas na conversa�
 
 
 
+
+
 #### Seção A: Stories sem transbordo humano
 
 Nessas seção serão descritas as stories que envolvem apenas o chatbot e o usuário, sem a necesssidade de recorrer aos atendentes humanos.
 
 TO-DO
+
+
 
 ##### Story A1: um visitante deseja informações sobre os parcelas e taxas para um empréstimo já sabendo o valor desejado e prazos desejados, mas não deseja contratar o empréstimo no momento.
 
@@ -316,6 +358,10 @@ dasda
 ##### Story A5: um visitante deseja informações sobre o saldo devedor e taxa juros de um empréstimo que ele já contratou. Após receber as informações ele decide contratar um novo empréstimo para quitar a dívida.
 
 dasda
+
+
+
+
 
 
 

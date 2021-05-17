@@ -5,6 +5,8 @@ session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true
 intents:
+- fora_do_escopo:
+    use_entities: true
 - cumprimentar:
     use_entities: true
 - relacionamento:
@@ -314,6 +316,9 @@ responses:
 
   utter_fora_do_escopo:
     - text: Me desculpe, mas realmente precisamos continuar nosso atendimento.
+
+rules:
+- fora-do-escopo
 
 actions:
 - action_teste
