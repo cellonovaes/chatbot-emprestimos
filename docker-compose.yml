@@ -13,17 +13,7 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile-chatbot
-
-  actions:
-    container_name: actions
-    ports:
-      - "5006:5006"
-    networks: ['rasa-network']
-    volumes:
-    - ./chatbot:/app/chatbot
-    build:
-      context: .
-      dockerfile: docker/Dockerfile-actions
+    command: ["rasa", "x", "--enable-api", "-p", "5003", "--cors", "*", "--no-prompt"]
 
   chatroom:
     container_name: chatroom
@@ -37,12 +27,4 @@ services:
       dockerfile: docker/Dockerfile-chatroom
     command: ["sh","-c","yarn serve"]
 
-  duckling:
-    container_name: duckling
-    ports:
-      - "8000:8000"
-    networks: ['rasa-network']
-    build:
-      context: .
-      dockerfile: docker/Dockerfile-duckling
 

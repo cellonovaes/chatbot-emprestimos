@@ -31,7 +31,11 @@ intents:
     use_entities: true
 - emprestimo_existente:
     use_entities: true
+- nenhum_assunto:
+    use_entities: true
 - fora_do_escopo:
+    use_entities: true
+- escolhe_finalidade:
     use_entities: true
 entities:
 - sentimento
@@ -56,7 +60,13 @@ slots:
   slot_valor:
     type: text
     influence_conversation: false
-  slot_prazo:
+  slot_parcelas:
+    type: text
+    influence_conversation: false
+  slot_finalidade:
+    type: text
+    influence_conversation: false
+  slot_id_emprestimo:
     type: text
     influence_conversation: false
 responses:
@@ -108,29 +118,84 @@ responses:
       title: Empréstimo já realizado
     - payload: emprestimo_existente
       title: Novo empréstimo
-    text: Você quer tirar dúvidas sobe um empréstimo já realizado ou sobre um novo empréstimo?
+    - payload: nenhum_assunto
+      title: Nada no momento
+    text: Você deseja falar sobre o queê?
   utter_fora_do_escopo:
   - text: Me desculpe, mas realmente precisamos continuar nosso atendimento.
   utter_continuar_conversa:
   - text: Mas vamos continuar nosso atendimento :)
-  utter_finalidade_do_emprestimo:
-  - text: Qual é a finalidade do empréstimo?
+
   utter_perguntar_nome:
   - text: Qual é o seu nome?
 
+  utter_aviso_transbordo:
+    - text: Você precisa falar com um atendente neste caso.
+
+  utter_novo_antendimento:
+    - text: Gostaria de fazer outra simulação?
+
+  utter_contratar_emprestimo_simulado:
+    - text: Gostaria de contratar o empréstimo simulado?
+
+  utter_aceita_transbordo:
+    - text: Quer falar com um atendente humano?
+
+  utter_empretimo_esta_na_lista:
+    - text: O emprestimo sobre o qual você deseja falar está na lista?
+
+
+  utter_finalidade_do_emprestimo:
+  - buttons:
+    - payload: /escolhe_finalidade{{"slot_finalidade":"refinanciar_divida"}}
+      title: Refinanciar uma dívida
+    - payload: /escolhe_finalidade{{"slot_finalidade":"investir_em_negocio"}}
+      title: Investir em um negócio
+    - payload: /escolhe_finalidade{{"slot_finalidade":fazer_reforma"}}
+      title: Fazer uma reforma
+    - payload: /escolhe_finalidade{{"slot_finalidade":"pagar_cartao"}}
+      title: Pagar cartão de crédito
+    - payload: /escolhe_finalidade{{"slot_finalidade":"comprar_carro"}}
+      title: Comprar um carro
+    - payload: /escolhe_finalidade{{"slot_finalidade":"casamento"}}
+      title: Casamento
+    - payload: /escolhe_finalidade{{"slot_finalidade":"fazer_compra"}}
+      title: Fazer uma compra
+    - payload: /escolhe_finalidade{{"slot_finalidade":"tirar_ferias"}}
+      title: Tirar férias
+    - payload: /escolhe_finalidade{{"slot_finalidade":"fazer_mudanca"}}
+      title: Fazer mudança
+    - payload: /escolhe_finalidade{{"slot_finalidade":"outro_motivo"}}
+      title: Outro motivo
+    text: Para qual finalidade você quer o empréstimo?
+
 actions:
 - fallback_action
-- action_greeting_name
+- cumprimenta_pelo_nome
+- ws_consulta_credito_score
+- bd_busca_taxa_juros
+- gera_simulacao
+- preenche_slot_transbordo_informacoes
+- preenche_slot_transbordo_negociacoes
+- preenche_slot_transbordo_vendas
+- bd_recupera_dados_emprestimo_existente
 forms:
-  form_usuario:
+  form_seleciona_emprestimo:
     required_slots:
-        slot_nome:
-          - type: from_entity
-            entity: nome
+      slot_id_emprestimo:
+        - type: from_entity
+          entity: nome
+  form_nome:
+    required_slots:
+      slot_nome:
+        - type: from_entity
+          entity: nome
+  form_cpf:
+    required_slots:
         slot_cpf:
           - type: from_entity
             entity: cpf
-  form_novo_emprestimo:
+  form_dados_emprestimo:
     required_slots:
         slot_valor:
           - type: from_entity

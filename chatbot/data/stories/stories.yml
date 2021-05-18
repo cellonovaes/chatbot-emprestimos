@@ -1,41 +1,161 @@
 version: "2.0"
 
 stories:
-- story: cumprimentar - happy path
+- story: Story 0 - cumprimento inicial.
   steps:
   - intent: cumprimentar
   - action: utter_cumprimentar
-  - checkpoint: check_cumprimento
-
-- story: ler nome
-  steps:
-  - checkpoint: check_cumprimento
   - action: utter_perguntar_nome
-  - action: form_usuario
-  - checkpoint: check_nome_ok
+  - action: form_nome
+  - action: cumprimenta_pelo_nome
+  - checkpoint: CP0
 
-- story: selecionar novo emprestimo
+- story: Story CP0_1 -  escolha do assunto - sair
   steps:
-  - checkpoint: check_nome_ok
+  - checkpoint: CP0
+  - action: utter_tipo_de_antendimento
+  - intent: nenhum_assunto
+  - action: utter_despedir
+#  - checkpoint: FIM
+
+- story: Story CP0_2 - escolha do assunto - novo empréstimo
+  steps:
+  - checkpoint: CP0
   - action: utter_tipo_de_antendimento
   - intent: emprestimo_novo
-  - checkpoint: check_emprestimo_novo
+  - checkpoint: CP1a
 
-- story: selecionar emprestimo existente
+- story: Story CP0_3 - escolha do assunto - empréstimo existente
   steps:
-  - checkpoint: check_nome_ok
+  - checkpoint: CP0
   - action: utter_tipo_de_antendimento
   - intent: emprestimo_existente
-  - checkpoint: check_emprestimo_existente
+  - checkpoint: CP2a
 
-- story: simular novo emprestimo
+- story: Story CP1a_1 - escolha da finalidade do empréstimo - outro motivo
   steps:
-  - checkpoint: check_emprestimo_novo
+  - checkpoint: CP1a
   - action: utter_finalidade_do_emprestimo
+  - intent: escolhe_finalidade
+  - slot_was_set:
+      - slot_finalidade: "outro_motivo"
+  - action: utter_aviso_transbordo
+  - checkpoint: CP3
 
-
-- story: simular emprestimo existente
+- story: Story CP1a_2 - escolha da finalidade do empréstimo - finalidade prevista
   steps:
-  - checkpoint: check_emprestimo_existente
-  - action: utter_despedir
+  - checkpoint: CP1a
+  - action: utter_finalidade_do_emprestimo
+  - action: form_cpf
+  - action: ws_consulta_credito_score
+  - action: bd_busca_taxa_juros
+  - action: form_dados_emprestimo
+  - action: gera_simulacao
+  - checkpoint: CP1b
 
+- story: Story CP1b_1 - conversar sobre outra simulação
+  steps:
+  - checkpoint: CP1b
+  - action: utter_novo_antendimento
+  - intent: afirmar
+  - action: form_dados_emprestimo
+  - action: gera_simulacao
+
+- story: Story CP1b_2 -  o usuário não quer conversar sobre outra simulação em contratar
+  steps:
+  - checkpoint: CP1b
+  - action: utter_novo_antendimento
+  - intent: negar
+  - action: utter_contratar_emprestimo_simulado
+  - intent: negar
+  - checkpoint: CP0
+
+- story: Story CP1b_3 -  contratar empréstimo simulado
+  steps:
+  - checkpoint: CP1b
+  - action: utter_novo_antendimento
+  - intent: negar
+  - action: utter_contratar_emprestimo_simulado
+  - intent: afirmar
+  - action: utter_aviso_transbordo
+  - action: preenche_slot_transbordo_vendas
+  - checkpoint: CP3
+
+- story: Story CP2a_1 - usuário não foi encontrado na basse de clientes
+  steps:
+  - checkpoint: CP2a
+  - action: form_cpf
+  - action: bd_busca_info_usuario
+  - action: slot{'id_usuario', null}
+  - action: preenche_slot_transbordo_informacaoes
+  - checkpoint: CP3
+
+- story: CP2a_2 - o empréstimo sobre o qual quer falar não foi localizado
+  steps:
+  - checkpoint: CP2a
+  - action: form_cpf
+  - action: bd_busca_info_usuario
+  #- action: slot{'id_usuario' is set}
+  - action: bd_busca_lista_emprestimos
+  - action: utter_lita_emprestimos_existentes
+  - action: utter_emprestimo_esta_na_lista
+  - intent: negar
+  - action: preenche_slot_transbordo_informacaoes
+  - checkpoint: CP3
+
+- story: CP2a_3 - obter informações sobre um empréstimo existente e que foi localizado
+  steps:
+  - checkpoint: CP2a
+  - action: form_cpf
+  - action: bd_busca_info_usuario
+  #- action: slot{'id_usuario' is set}
+  - action: bd_busca_lista_emprestimos
+  - action: utter_empretimo_esta_na_lista
+  - intent: afirmar
+  - action: form_seleciona_emprestimo
+  - action: bd_recupera_dados_emprestimo_existente
+  - checkpoint: CP2b
+
+- story: Story CP2b_1 - usuário aceita transbordo para renegociar emprestimo
+  steps:
+  - checkpoint: CP2b
+  - action: utter_renegociar_emprestimo
+  - intent: afirmar
+  - action: utter_aviso_transbordo
+  - action: preenche_slot_transbordo_negociacao
+  - checkpoint: CP3
+
+- story: Story CP2b_2 - falar sobre outro empréstimo existente
+  steps:
+  - checkpoint: CP2b
+  - action: utter_renegociar_emprestimo
+  - intent: negar
+  - action: utter_novo_antendimento_emprestimo_existente
+  - intent: afirmar
+  - action: utter_lista_emprestimos
+  - action: bd_recupera_dados_emprestimo_existente
+  - action: utter_info_emprestimo_existente
+
+- story: Story CP2b_3 -  não quer falar sobre outros emprestimos existentes nem renegociar um deles
+  steps:
+  - checkpoint: CP2b
+  - action: utter_novo_antendimento_emprestimo_existente
+  - intent: negar
+  - action: utter_renegociar_emprestimo
+  - intent: negar
+  - checkpoint: CP0
+
+- story: Story CP3_1 - transbordo para atendimento humano
+  steps:
+  - checkpoint: CP3
+  - action: utter_aceita_transbordo
+  - intent: afirmar
+  - action: executa_transbordo
+  - checkpoint: CP0
+
+- story: Story CP3_2 -  Finalizar assunto e voltar para o checkpoint C0
+  steps:
+  - checkpoint: CP3
+  - action: utter_aceita_transbordo
+  - intent: negar
+  - checkpoint: CP0

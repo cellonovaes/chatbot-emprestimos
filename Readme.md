@@ -5,6 +5,23 @@
 
 
 
+## <a name="escopo"></a>O que ainda precisa ser feito
+
+Todas as regras, actions, stories e outras partes descritas neste documento foram implementadas no chatbot, porém ele ainda não está completamente funcional.
+
+Por enquanto as ações foram implementadas apenas para ilustrar as o funcionamento, mas ainda não estão executando a lógica de negócio descrita na especificação.
+
+As stories também foram todas construidas, porém ainda é necessário entender como utilizar melhor alguns recursos para que seja possível realizar corretamente o fluxo de dados.
+
+O fator limitante ainda é a falta de familiaridade com o [Rasa](http://www.rasa.com), porém já é possível observar todas as idéias e como será o funcionamento do chatbot uma vez que os problemas sejam resolvidos.
+
+Vale resaltar que os trechos de código e configuraçõess apresentados neste documento realmente estão no chatbot, assim é possível entender mesmo as partes que ainda não estão funcionando.
+
+
+
+
+
+
 ## <a name="escopo"></a>Escopo
 
 Este projeto visa apresentar uma arquitetura de chatbot escalavél, flexivel e resiliente, capaz de processar um alto volume de dúvidas e estar preparado para aumentos rápidos de demanda.
@@ -279,25 +296,25 @@ Também foi possível utilizar os botões para preencher slot com valores espec�
 ```
   utter_finalidade_do_emprestimo:
   - buttons:
-    - payload: /escolhe_finalidade{"finalidade": "refinanciar_divida"}
+    - payload: /escolhe_finalidade{{"slot_finalidade":"refinanciar_divida"}}
       title: Refinanciar uma dívida
-    - payload: /escolhe_finalidade{"finalidade": "investir_em_negocio"}
+    - payload: /escolhe_finalidade{{"slot_finalidade":"investir_em_negocio"}}
       title: Investir em um negócio
-    - payload: /escolhe_finalidade{"finalidade": "fazer_reforma"}
+    - payload: /escolhe_finalidade{{"slot_finalidade":fazer_reforma"}}
       title: Fazer uma reforma
-    - payload: /escolhe_finalidade{"finalidade": "pagar_cartao"}
+    - payload: /escolhe_finalidade{{"slot_finalidade":"pagar_cartao"}}
       title: Pagar cartão de crédito
-    - payload: /escolhe_finalidade{"finalidade": "comprar_carro"}
+    - payload: /escolhe_finalidade{{"slot_finalidade":"comprar_carro"}}
       title: Comprar um carro
-    - payload: /escolhe_finalidade{"finalidade": "casamento"}
+    - payload: /escolhe_finalidade{{"slot_finalidade":"casamento"}}
       title: Casamento
-    - payload: /escolhe_finalidade{"finalidade": "fazer_compra"}
+    - payload: /escolhe_finalidade{{"slot_finalidade":"fazer_compra"}}
       title: Fazer uma compra
-    - payload: /escolhe_finalidade{"finalidade": "tirar_ferias"}
+    - payload: /escolhe_finalidade{{"slot_finalidade":"tirar_ferias"}}
       title: Tirar férias
-    - payload: /escolhe_finalidade{"finalidade": "fazer_mudanca"}
+    - payload: /escolhe_finalidade{{"slot_finalidade":"fazer_mudanca"}}
       title: Fazer mudança
-    - payload: /escolhe_finalidade{"finalidade": "outro"}
+    - payload: /escolhe_finalidade{{"slot_finalidade":"outro_motivo"}}
       title: Outro motivo
     text: Para qual finalidade você quer o empréstimo?
 ```
@@ -398,6 +415,22 @@ A seguir serão listadas e descritas cada uma das stories previstas na conversa�
 O chatbot cumprimenta o utiliza um form para obter o seu nome. A partir desse ponto se considera que eles foram apresentados.
 
 ```
+- story: Story 0 - cumprimento inicial.
+  steps:
+  - intent: cumprimentar
+  - action: utter_cumprimentar
+  - action: utter_perguntar_nome
+  - action: form_usuario
+  - checkpoint: CP0
+```
+
+
+
+## Stories iniciando no checkpoint **CP0**
+
+Para facilitar a leitura da escolha foram utilizados botões para das suas opções, e dependendo da opção a conversa vai para o próximo checkpoint.
+
+```
 utter_tipo_de_antendimento:
   - buttons:
     - payload: emprestimo_novo
@@ -409,23 +442,17 @@ utter_tipo_de_antendimento:
 
 
 
-
-
-## Stories iniciando no checkpoint **CP0**
-
-Para facilitar a leitura da escolha foram utilizados botões para das suas opções, e dependendo da opção a conversa vai para o próximo checkpoint.
-
 ### Story CP0_1: escolha do assunto - sair
 
 O chatbot pergunta sobre o assunto a ser conversado e o usuário responde que não deseja conversar sobre nada no momento. Este é o sinal para finalizar o atendimento.
 
 ```
-- story: escolha do assunto - sair
+- story: Story CP0_1 -  escolha do assunto - sair
   steps:
   - checkpoint: CP0
   - action: utter_tipo_de_antendimento
   - intent: nenhum_assunto
-  - action: utter_despedida
+  - action: utter_despedir
   - checkpoint: FIM
 ```
 
@@ -436,7 +463,7 @@ O chatbot pergunta sobre o assunto a ser conversado e o usuário responde que n�
 O chatbot pergunta sobre o assunto a ser conversado , ele responde que é sobre um novo empréstimo e é direcionado para o checkpoint de inicio para novos empréstimos.
 
 ```
-- story: escolha do assunto - novo empréstimo
+- story: Story CP0_2 - escolha do assunto - novo empréstimo
   steps:
   - checkpoint: CP0
   - action: utter_tipo_de_antendimento
@@ -451,7 +478,7 @@ O chatbot pergunta sobre o assunto a ser conversado , ele responde que é sobre 
 O chatbot pergunta sobre o assunto a ser conversado , ele responde que é sobre um empréstimo existente e é direcionado para o checkpoint de inicio para empréstimos existentes.
 
 ```
-- story: escolha do assunto - empréstimo existente
+- story: Story CP0_3 - escolha do assunto - empréstimo existente
   steps:
   - checkpoint: CP0
   - action: utter_tipo_de_antendimento
@@ -478,13 +505,14 @@ Caso o usuário escreva "outro motivo", ou um motivo não previsto, é avisado a
 *obs: em uma situação real seria mais interessante tentar tratar esse caso pelo chatbot, porém nessa demonstração isso ilustra bem como se pode realizar o transbordo nesse caso.*
 
 ```
-- story: escolha da finalidade do empréstimo - outro motivo
+- story: Story CP1a_1 - escolha da finalidade do empréstimo - outro motivo
   steps:
   - checkpoint: CP1a
-  - action: form_finalidade_do_emprestimo
-  - intent: outro_motivo
+  - action: utter_finalidade_do_emprestimo
+  - intent: escolhe_finalidade
+  - slot_was_set:
+      - slot_finalidade: "outro_motivo"
   - action: utter_aviso_transbordo
-  - action: preenche_slot_transbordo_vendas
   - checkpoint: CP3
 ```
 
@@ -501,16 +529,15 @@ Em seguida, os dados são utilizados para gerar a simulação, e os dados do emp
 Finalmente, ele é direcionado para o checkpoint CP1b que representa o final de uma simulação de empréstimo.
 
 ```
-- story: escolha da finalidade do empréstimo - outro motivo
+- story: Story CP1a_2 - escolha da finalidade do empréstimo - finalidade prevista
   steps:
   - checkpoint: CP1a
-  - action: form_finalidade_do_empresstimo
+  - action: utter_finalidade_do_emprestimo
   - action: form_cpf
   - action: ws_consulta_credito_score
   - action: bd_busca_taxa_juros
   - action: form_dados_emprestimo
   - action: gera_simulacao
-  - action: utter_exibe_simulacao
   - checkpoint: CP1b
 ```
 
@@ -529,14 +556,13 @@ O checkpoint CP1b representa o final de uma conversa sobre simulação ded empr�
 Nese caso o usuário escolhe outro valor e número de parcelas, e recebe os dados de simulação desse empréstimo.
 
 ```
-- story: nova simulação
+- story: Story CP1b_1 - conversar sobre outra simulação
   steps:
   - checkpoint: CP1b
   - action: utter_novo_antendimento
   - intent: afirmacao
   - action: form_dados_emprestimo
   - action: gera_simulacao
-  - action: utter_exibe_simulacao
 ```
 
 
@@ -546,7 +572,7 @@ Nese caso o usuário escolhe outro valor e número de parcelas, e recebe os dado
 Nese caso o usuário não deseja nem contratar o empréstimo simulado e nem fazer uma nova simulação.
 
 ```
-- story: o usuário não quer conversar sobre outra simulação em contratar
+- story: Story CP1b_2 -  o usuário não quer conversar sobre outra simulação em contratar
   steps:
   - checkpoint: CP1b
   - action: utter_novo_antendimento
@@ -590,12 +616,12 @@ A partir do checkpoint CP2a o usuário pode conversar sobre empréstimos existen
 Quando o usuário não é encontrado na base de clientes, ele tem a opção de conversar com um atendente humano para descobrir o que houve.
 
 ```
-- story: usuário não foi encontrado na basse de clientes
+- story: Story CP2a_1 - usuário não foi encontrado na basse de clientes
   steps:
   - checkpoint: CP2a
   - action: form_cpf
   - action: bd_busca_info_usuario
-  - action: slot{'id_usuario', null} # Precisso ver como fazer isso com o Rasa
+  - action: slot{'id_usuario', null}
   - action: preenche_slot_transbordo_informacaoes
   - checkpoint: CP3
 ```
@@ -609,16 +635,16 @@ Quando o usuário não é encontrado na base de clientes, ele tem a opção de c
 O usuário não encontra na lista de empréstimos aquele sobre o qual deseja conversar. Nesse caso ele será encaminhado para o setor de informações caso aceite.
 
 ```
-- story: o empréstimo sobre o qual quer falar não foi localizado
+- story: CP2a_2 - o empréstimo sobre o qual quer falar não foi localizado
   steps:
   - checkpoint: CP2a
   - action: form_cpf
   - action: bd_busca_info_usuario
-  - action: slot{'id_usuario' is set} # Precisso ver como fazer isso com o Rasa
+  - action: slot{'id_usuario' is set}
   - action: bd_busca_lista_emprestimos
   - action: utter_lita_emprestimos_existentes
   - action: utter_emprestimo_esta_na_lista
-  - intent: negacao
+  - intent: negar
   - action: preenche_slot_transbordo_informacaoes
   - checkpoint: CP3
 ```
@@ -630,19 +656,18 @@ O usuário não encontra na lista de empréstimos aquele sobre o qual deseja con
 O usuário seleciona um do empréstimos na lista recuperada pelo chatbot, e recebe informações sobre ele.
 
 ```
-- story: obter informações sobre um empréstimo existente e que foi localizado
+- story: CP2a_3 - obter informações sobre um empréstimo existente e que foi localizado
   steps:
   - checkpoint: CP2a
   - action: form_cpf
   - action: bd_busca_info_usuario
-  - action: slot{'id_usuario' is set} # Precisso ver como fazer isso com o Rasa
+  - action: slot{'id_usuario' is set} 
   - action: bd_busca_lista_emprestimos
   - action: utter_lista_emprestimos_existentes
   - action: utter_empretimo_esta_na_lista
-  - intent: afirmacao
+  - intent: afirmar
   - action: form_seleciona_emprestimo
   - action: bd_recupera_dados_emprestimo_existente
-  - action: utter_exibe_dados_emprestimo_existente
   - checkpoint: CP2b
 ```
 
@@ -661,11 +686,11 @@ Este checkpoint marca o final de uma conversa sobre dúvidas sobre um exmprésti
 O usuário escolhe aceitar o transbordo para negociar um emprestimo existente com um atendente humano.
 
 ```
-- story: usuário aceita transbordo para renegociar emprestimo
+- story: Story CP2b_1 - usuário aceita transbordo para renegociar emprestimo
   steps:
   - checkpoint: CP2b
   - action: utter_renegociar_emprestimo
-  - intent: afirmacao
+  - intent: afirmar
   - action: utter_aviso_transbordo
   - action: preenche_slot_transbordo_negociacao
   - checkpoint: CP3
@@ -678,13 +703,13 @@ O usuário escolhe aceitar o transbordo para negociar um emprestimo existente co
 O usuário quer falar sobre um outro empréstimo existente que foi listado anteriormente.
 
 ```
-- story: falar sobre outro empréstimo existente
+- story: Story CP2b_2 - falar sobre outro empréstimo existente
   steps:
   - checkpoint: CP2b
   - action: utter_renegociar_emprestimo
-  - intent: negacao
+  - intent: negar
   - action: utter_novo_antendimento_emprestimo_existente
-  - intent: afirmacao
+  - intent: afirmar
   - action: utter_lista_emprestimos
   - action: bd_recupera_dados_emprestimo_existente
   - action: utter_info_emprestimo_existente
@@ -697,13 +722,13 @@ O usuário quer falar sobre um outro empréstimo existente que foi listado anter
 O usuário não quer mais falar sobre empréstimos existentes e é direcionado para C0, assim ele pode falar sobre outra coisa.
 
 ```
-- story: não quer falar sobre outros emprestimos existentes nem renegociar um deles
+- story: Story CP2b_3 -  não quer falar sobre outros emprestimos existentes nem renegociar um deles
   steps:
   - checkpoint: CP2b
-  - action: utter_novo_antendimento
-  - intent: negacao
-  - action: utter_contratar_emprestimo_simulado
-  - intent: negacao
+  - action: utter_novo_antendimento_emprestimo_existente
+  - intent: negar
+  - action: utter_renegociar_emprestimo
+  - intent: negar
   - checkpoint: CP0
 ```
 
@@ -720,11 +745,11 @@ O checkpoint CP3 marca o inicio do transbordo humano. O usuário será perguntad
 ### Story CP3_1:  transbordo para atendimento humano
 
 ```
-- story: o usuário não quer conversar sobre outra simulação em contratar
+- story: Story CP3_1 - transbordo para atendimento humano
   steps:
   - checkpoint: CP3
   - action: utter_aceita_transbordo
-  - intent: afirmacao
+  - intent: afirmar
   - action: executa_transbordo
   - checkpoint: CP0
 ```
@@ -738,11 +763,11 @@ O checkpoint CP3 marca o inicio do transbordo humano. O usuário será perguntad
 Finalizar assunto e voltar para o checkpoint C0 para falar sobre outra coisa.
 
 ```
-- story: o usuário não quer conversar sobre outra simulação em contratar
+- story: Story CP3_2 -  Finalizar assunto e voltar para o checkpoint C0
   steps:
   - checkpoint: CP3
   - action: utter_aceita_transbordo
-  - intent: negacao
+  - intent: negar
   - checkpoint: CP0
 ```
 
