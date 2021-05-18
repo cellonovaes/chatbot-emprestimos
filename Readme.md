@@ -613,8 +613,10 @@ A partir do checkpoint CP2a o usuário pode conversar sobre empréstimos existen
   - action: slot{'id_usuario' is set} # Precisso ver como fazer isso com o Rasa
   - action: bd_busca_lista_emprestimos
   - action: utter_lita_emprestimos_existentes
-  - action: utter_empretimo_esta_na_lista
+  - action: utter_emprestimo_esta_na_lista
   - intent: negacao
+  - action: preenche_slot_transbordo_informacaoes
+  - checkpoint: CP3
 ```
 
 
@@ -629,23 +631,13 @@ A partir do checkpoint CP2a o usuário pode conversar sobre empréstimos existen
   - action: bd_busca_info_usuario
   - action: slot{'id_usuario' is set} # Precisso ver como fazer isso com o Rasa
   - action: bd_busca_lista_emprestimos
-  - action: utter_lita_emprestimos_existentes
+  - action: utter_lista_emprestimos_existentes
   - action: utter_empretimo_esta_na_lista
-  - intent: negacao
-  
-  
-  - action: utter_exibe_simulacao
-  - checkpoint: CP2b
-  
-  
-  - checkpoint: CP2b
-  - action: utter_renegociar_emprestimo
-  - intent: negacao
-  - action: utter_novo_antendimento_emprestimo_existente
   - intent: afirmacao
-  - action: utter_lista_emprestimos
+  - action: form_seleciona_emprestimo
   - action: bd_recupera_dados_emprestimo_existente
-  - action: utter_info_emprestimo_existente
+  - action: utter_exibe_dados_emprestimo_existente
+  - checkpoint: CP2b
 ```
 
 
