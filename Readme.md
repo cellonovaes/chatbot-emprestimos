@@ -7,7 +7,7 @@
 
 ## <a name="escopo"></a>Escopo
 
-Este projeto visa apresentar uma arquitetura de chatbot escalavél, flexivel e resiliente, capaz de processar um alto volume de dúvidass e estar preparado para aumentos rápidos de demanda.
+Este projeto visa apresentar uma arquitetura de chatbot escalavél, flexivel e resiliente, capaz de processar um alto volume de dúvidas e estar preparado para aumentos rápidos de demanda.
 
 Devem estar contemplados o transbordo do atendimento para atendentes humanos, caso necessário, assim como ações que requeiram a consulta à serviços externos, consulta em bases de dados, o uso de custom forms, e também a utilização de fallback actions.
 
@@ -458,4 +458,124 @@ O chatbot pergunta sobre o assunto a ser conversado , ele responde que é sobre 
   - intent: emprestimo_existente
   - checkpoint: CP2a
 ```
+
+
+
+
+
+## Stories iniciando no checkpoint **CP1a**
+
+As stories que inicial no checkpoint C1a requerem que o usuário forneça qual é a finalidade do empréstimo, pois ela será utilizada no cálculo da taxa do valor das parcelas. Por conta disso foi utilizado um **form** para popular o **slot finalidade** com este dado, persistindo na pergunta.
+
+
+
+### Story CP1a_1: escolha da finalidade do empréstimo - outro motivo
+
+Existe uma série de finalidade para empréstimo que estão previstas em uma lista, e essas finalidades são apresentadas ao usuário no início do diálogo. 
+
+Caso o usuário escreva "outro motivo", ou um motivo não previsto, é avisado a ele que esse caso requer um atendente humano, e ele é direcionado para o checkpoint do inicio do transbordo. Porém antes de ser direcionado para esse checkpoint, o **slot tipo_transbordo** recebe o valor **'vendas'**, pois este á o setor responsável por este tipo de atendimento.
+
+*obs: em uma situação real seria mais interessante tentar tratar esse caso pelo chatbot, porém nessa demonstração isso ilustra bem como se pode realizar o transbordo nesse caso.*
+
+```
+- story: escolha da finalidade do empréstimo - outro motivo
+  steps:
+  - checkpoint: CP1a
+  - action: form_tipo_de_antendimento
+  - intent: outro_motivo
+  - action: utter_aviso_transbordo
+  - action: preenche_slot_transbordo_vendas
+  - checkpoint: CP3
+```
+
+
+
+
+
+### Story CP1a_2: escolha da finalidade do empréstimo - finalidade prevista
+
+Se o usuário informar uma finalidade de emprestimo prevista, é utilizado um form para preencher o **slot cpf** (caso ainda não esteja), e em seguida é feita uma busca no banco de dados para recuperar a taxa de juros para a finalidade escolhida.
+
+Em seguida, os dados são utilizados para gerar a simulação, e os dados do empréstimo são exibidos ao usuário.
+
+Finalmente, ele é direcionado para o checkpoint CP1b que representa o final de uma simulação de empréstimo.
+
+```
+- story: escolha da finalidade do empréstimo - outro motivo
+  steps:
+  - checkpoint: CP1a
+  - action: form_tipo_de_antendimento
+  - action: form_cpf
+  - action: ws_consulta_credito_score
+  - action: bd_busca_taxa_juros
+  - action: form_dados_emprestimo
+  - action: gera_simulacao
+  - action: exibe_simulacao
+  - checkpoint: CP1b
+```
+
+
+
+
+
+## Stories iniciando no checkpoint **CP1b**
+
+O checkpoint CP1b representa o final de uma conversa sobre simulação ded empréstimo. A partir desse ponto o usuário tem 3 alternativas: fazer outra simulação utilizando diferentes valores e número de parcelas, contratar o empréstimo simulado (transbordo), ou encerrar a conversa (voltar para o checkpoint C0).
+
+
+
+### Story CP2b_1: conversar sobre outra simulação
+
+Nese caso o usuário escolhe outro valor e número de parcelas, e recebe os dados de simulação desse empréstimo.
+
+```
+- story: nova simulação
+  steps:
+  - checkpoint: CP1b
+  - action: utter_novo_antendimento
+  - intent: afirmacao
+  - action: form_dados_emprestimo
+  - action: gera_simulacao
+  - action: exibe_simulacao
+```
+
+
+
+### Story CP2b_2:  o usuário não quer conversar sobre outra simulação em contratar
+
+Nese caso o usuário não deseja nem contratar o empréstimo simulado e nem fazer uma nova simulação.
+
+```
+- story: o usuário não quer conversar sobre outra simulação em contratar
+  steps:
+  - checkpoint: CP1b
+  - action: utter_novo_antendimento
+  - intent: negacao
+  - action: utter_contratar_emprestimo_simulado
+  - intent: negacao
+  - checkpoint: CP0
+```
+
+
+
+### Story CP2b_3:  contratar empréstimo simulado
+
+Nese caso o usuário deseja  contratar o empréstimo simulado, então é direcionado para o checkpoint de inicio do transbordo para o setor de vendas.
+
+```
+- story: contratar empréstimo simulado
+  steps:
+  - checkpoint: CP1b
+  - action: utter_novo_antendimento
+  - intent: negacao
+  - action: utter_contratar_emprestimo_simulado
+  - intent: afirmação
+  - action: utter_aviso_transbordo
+  - action: preenche_slot_transbordo_vendas
+  - checkpoint: CP3
+```
+
+
+
+
 
