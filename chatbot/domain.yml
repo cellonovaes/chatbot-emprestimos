@@ -179,6 +179,7 @@ actions:
 - preenche_slot_transbordo_negociacoes
 - preenche_slot_transbordo_vendas
 - bd_recupera_dados_emprestimo_existente
+- bd_busca_info_usuario
 forms:
   form_seleciona_emprestimo:
     required_slots:
