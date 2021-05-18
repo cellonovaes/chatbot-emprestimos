@@ -1,2 +1,0 @@
-FROM rasa/duckling:latest
-EXPOSE 8000

@@ -13,7 +13,7 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile-chatbot
-    command: ["rasa", "x", "--enable-api", "-p", "5003", "--cors", "*", "--no-prompt"]
+    command: ["rasa", "run", "--enable-api", "-p", "5003", "--cors", "*"]
 
   chatroom:
     container_name: chatroom

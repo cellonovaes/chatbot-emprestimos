@@ -1,6 +1,0 @@
-FROM python:3.8
-WORKDIR /app/chatbot
-EXPOSE 5006
-RUN python -m pip install --upgrade pip
-RUN python -m pip install rasa==2.4.0
-CMD ["rasa", "run", "actions", "--port", "5056"]

@@ -7,7 +7,7 @@
 
 ## <a name="escopo"></a>O que ainda precisa ser feito
 
-Todas as regras, actions, stories e outras partes descritas neste documento foram implementadas no chatbot, porém ele ainda não está completamente funcional.
+Todas as regras, actions, stories e outras partes descritas neste documento foram implementadas no chatbot, porém ele ainda não está funcional. Ainda é necessário fazer ajustes e testes para que ele funcione como eperado.
 
 Por enquanto as ações foram implementadas apenas para ilustrar as o funcionamento, mas ainda não estão executando a lógica de negócio descrita na especificação.
 
@@ -560,7 +560,7 @@ Nese caso o usuário escolhe outro valor e número de parcelas, e recebe os dado
   steps:
   - checkpoint: CP1b
   - action: utter_novo_antendimento
-  - intent: afirmacao
+  - intent: afirmar
   - action: form_dados_emprestimo
   - action: gera_simulacao
 ```
@@ -576,9 +576,9 @@ Nese caso o usuário não deseja nem contratar o empréstimo simulado e nem faze
   steps:
   - checkpoint: CP1b
   - action: utter_novo_antendimento
-  - intent: negacao
+  - intent: negar
   - action: utter_contratar_emprestimo_simulado
-  - intent: negacao
+  - intent: negar
   - checkpoint: CP0
 ```
 
@@ -593,9 +593,9 @@ Nese caso o usuário deseja  contratar o empréstimo simulado, então é direcio
   steps:
   - checkpoint: CP1b
   - action: utter_novo_antendimento
-  - intent: negacao
+  - intent: negar
   - action: utter_contratar_emprestimo_simulado
-  - intent: afirmação
+  - intent: afirmar
   - action: utter_aviso_transbordo
   - action: preenche_slot_transbordo_vendas
   - checkpoint: CP3
