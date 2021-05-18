@@ -1,12 +1,11 @@
 # Desafio Serasa
-
 ## Um chatbot para atendimento de dúvidas em uma plataforma de empréstimos
-[Escopo](#escopo) | [Instalação](#instalacao) | [Arquitetura](#arquitetura) | [Fallbacks](#fallbacks) | [Transbordo](#transbordo) | [Ações](#actions)| [Forms](#forms) | [Stories](#stories)| [Conclusão](#conclusao)
+[Escopo](#escopo) | [Instalação](#instalacao) | [Arquitetura](#arquitetura) | [Fallbacks](#fallbacks) | [Transbordo](#transbordo) | [Ações](#actions)| [Forms](#forms) | [Stories](#stories)
 
 
 
 
-### <a name="escopo"></a>Escopo
+## <a name="escopo"></a>Escopo
 
 Este projeto visa apresentar uma arquitetura de chatbot escalavél, flexivel e resiliente, capaz de processar um alto volume de dúvidass e estar preparado para aumentos rápidos de demanda.
 
@@ -24,7 +23,7 @@ Para entender alguns termos e as modalidades de empréstimos foi consultada a pl
 
 
 
-### <a name="instalacao"></a> Instalação e Execução
+## <a name="instalacao"></a> Instalação e Execução
 
 Este chatbot de demonstração foi construido com base na plataforma [Rasa](https://rasa.com/), utilizando alguns recursos disponibilizados no exemplo [Financial-Demo da RasaHQ](https://github.com/RasaHQ/financial-demo), no [Rassa Boilerplate](https://github.com/lappis-unb/rasa-ptbr-boilerplate).
 
@@ -49,7 +48,7 @@ http://127.0.0.1:8081
 
 
 
-### <a name="arquitetura"></a>Arquitetura
+## <a name="arquitetura"></a>Arquitetura
 
 A arquitetura apresentada nesta seção foi definida considerando que as mensagens chegarão por meio da infraestrutura do Whatsapp, porém tudo foi pensado para ser independente de plataforma e tecnologia.
 
@@ -77,7 +76,7 @@ Por questões práticas de tempo e recursos esta arquitetura não foi implementa
 
 
 
-### <a name="transbordo"></a>Alternativas para realizar o Transbordo
+## <a name="transbordo"></a>Alternativas para realizar o Transbordo
 
 A arquitetura desscrita possibilita algumass formas diferentes para tratar a transição do antendimento entre um chatbot e um atendente humano. A seguir serão descritas duas dela.
 
@@ -92,7 +91,7 @@ Obs: algumas idéias dessa seção foram baseadas no artigo:
 
 
 
-#### Encaminhamento para outro canal
+### Encaminhamento para outro canal
 
 Embora eu ainda não esteja certo da técnica atualmente utilzada na Serasa, acredito que se enquadre nesa categoria. 
 
@@ -110,7 +109,7 @@ Todavia existem algumas formas de incrementar esssa abordagem, como a criação 
 
 
 
-#### Realizar o atendimento híbrido no mesmo canal
+### Realizar o atendimento híbrido no mesmo canal
 
 Essa estratégia é a que parece ressultar em melhor experiência do usuário, pois permite que seja utilizado o mesmo canal de comunicação o tempo todo. Tanto ao transferir do chatbot para o atendente, transferir de uma atendente para o outro, e transferir do atendente de volta para o chatbot.
 
@@ -122,7 +121,13 @@ Todavia é uma estratégia mais difícil de implementar pois exige um maior grau
 
 Uma forma de implementar isso seria por meio da persistência de contexto um sistema de lock compartilhado com infomações adicionais descrevendo a cadeia de atendimento. Dessa forma é possível retornar o atendimento para qualquer chatbot ou atendente que participou da conversa com o usuário.
 
-### <a name="actions"></a>Retrieval Actions e External Events
+
+
+
+
+
+
+## <a name="actions"></a>Retrieval Actions e External Events
 
 Para a implementação do chatbot foi necessário definir algumas ações relacionadas com a recuperação de informação e o transbordo dos atendimentos.
 
@@ -141,7 +146,7 @@ Durante o fluxo da conversa pode ser necessário que o chatbot dispare uma ou ma
 
 
 
-### <a name="fallbacks"></a>Out of Scope e Fallbacks
+## <a name="fallbacks"></a>Out of Scope e Fallbacks
 
 A continuidade da conversa é algo essencial para uma boa experiência do usuário. Dessa forma, devemos evitar a quebra do dialogo por conta de perguntas fora de contexto que o usuário possa fazer, assim como por conta de falha de entendimento ou baixa confiabilidade no reconhecimento de intents.
 
@@ -183,7 +188,7 @@ rules:
 
 Além de sentenças fora do escopo também podem ocorrer casos em que o módulo de NLU não compreende, com grau de confiabilidade suficiente, o que foi dito pelo usuário. Nesses casos é mais interessante assumir que o chatbot não entender o que o visitante disse do que assumir o risco re realizar uma ação incorreta.
 
-Esse tratamento é feito pela política de fallback que, se bem utilizada, pode ajudar a promover a continuidade da conversa nesses casos. Nesse projeto foram utilizadas as recomendação contidas na documentação da Rasa sobre como tratar o fallback [(https://rasa.com/docs/rasa/fallback-handoff)](https://rasa.com/docs/rasa/fallback-handoff/).
+Esse tratamento é feito pela política de fallback que, se bem utilizada, pode ajudar a promover a continuidade da conversa nesses casos. Nesse projeto foram utilizadas as recomendação contidas na documentação da Rasa sobre como tratar o [fallback](https://rasa.com/docs/rasa/fallback-handoff/).
 
 Para configurar esse **fallback de 2 estágios** foram seguidos os passos:
 
@@ -249,7 +254,7 @@ rules:
 
 
 
-### <a name="forms"></a>Forms, Slots e Botões
+## <a name="forms"></a>Forms, Slots e Botões
 
 Durante o fluxo da conversa são necessários alguns dados como o nome e cpf do usuário, e em partes específicas são necessários ainda outros dados como o valor do empréstimo solicitado e o número desejado de parcelas.
 
@@ -303,7 +308,7 @@ Também foi possível utilizar os botões para preencher slot com valores espec�
 
 
 
-### <a name="stories"></a>Regras
+## <a name="stories"></a>Regras
 
 
 
@@ -338,7 +343,43 @@ rules:
 
 
 
-### <a name="stories"></a>Descrição das Stories
+
+
+## <a name="stories"></a>Checkpoints
+
+
+
+Os [checkpoints](https://rasa.com/docs/rasa/stories#checkpoints) são muito úteis para a criação de stories curtas, sendo possível saber no inicio de cada story em qual posição do diálogo o usuário e o chatbot estão.
+
+Nesta demonstração, o diálogo será dividio em alguns segmentos, sendo em cada segmento podem ocorrer diálogos específicos. Sendo assim, serão utilizados checkpoints para definir em qual segmento a conversa está.
+
+Os checkpoints serão:
+
+* **CP 0**: o chatbot e o usuário já se cumprimentaram, e o usuário já forneceu seu nome. Este checkpoint representa o inicio de novas conversas, ou quando o usuário quer conversar sobre outro tipo de empréstimo. O **CP 0** também é utilizado para retornar o fluxo da conversa após o transbordo sem que o contexto seja perdido, assim o usuário não precisa informar seus dados novamente.
+
+  
+
+* **CP 1a**: o usuário já informou que deseja conversar sobre um novo empréstimo.
+
+* **CP 1b**: a conversa sobre o novo empréstimo já ocorreu, e a simulação de empréstimo já foi apresentada ao usuário.
+
+  
+
+* **CP 2a**:  o usuário já informou que deseja conversar sobre um empréstimo existente.
+
+* **CP 2b**: a conversa sobre o novo empréstimo já ocorreu, e as informações do empréstimo existente já foram apresentadas ao usuário.
+
+  
+
+* **CP 3**: o chatbot não pode atender o usuário e vai perguntar em seguida se ele que um atendente humano.
+
+
+
+
+
+
+
+## <a name="stories"></a>Descrição das Stories
 
 
 
@@ -352,51 +393,12 @@ Os checkpoints podem facilitar conssideravelmente o controle do floco da convers
 
 A seguir serão listadas e descritas cada uma das stories previstas na conversação. As ações, decisões e tratamentos de excessões serão descritos em alto nível, assim como a especificação dos serviços utilizados também serão conceituais.
 
+### Story 0: cumprimento inicial.
 
-
-
-
-#### Story 01: cumprimento inicial.
-
-Ao receber um cumprimento o chatbot responde a ele, e o progresso é registrado para liberar o fluxo para as próximas ações.
+O chatbot cumprimenta o utiliza um form para obter o seu nome. A partir desse ponto se considera que eles foram apresentados.
 
 ```
-- story: cumprimentar
-  steps:
-  - intent: cumprimentar
-  - action: utter_cumprimentar
-  - checkpoint: check_cumprimento
-```
-
-
-
-
-
-#### Story 02: ler nome.
-
-Após o cumprimento inicial o chatbot pergunta o nome do usuário e o armazena em um slot. Foi utilizado um form para persistir na pergunta até que o usuário forneça seu nome.
-
-```
-- story: ler nome
-  steps:
-  - checkpoint: check_cumprimento
-  - action: utter_perguntar_nome
-  - action: form_usuario
-  - checkpoint: check_nome_ok
-```
-
-
-
-
-
-#### Stories 03 e 04: seleciona tipo de atendimento
-
-Uma vez que o chatbot conhece o nome do usuário, ele pergunta qual é o tipo de atendimento desejado. O usuário então escolhe entre um Novo Empréstimo e um Empréstimo Existente.
-
-Para facilitar a leitura da escolha foram utilizados botões para das suas opções, e dependendo da opção é registrado um checkpoint para o inicio do próximo diálogo.
-
-```
-  utter_tipo_de_antendimento:
+utter_tipo_de_antendimento:
   - buttons:
     - payload: emprestimo_novo
       title: Empréstimo já realizado
@@ -407,154 +409,53 @@ Para facilitar a leitura da escolha foram utilizados botões para das suas opç�
 
 
 
+
+
+## Stories iniciando no checkpoint **C0**
+
+Para facilitar a leitura da escolha foram utilizados botões para das suas opções, e dependendo da opção a conversa vai para o próximo checkpoint.
+
+### Story C0_1: escolha do assunto - sair
+
+O chatbot pergunta sobre o assunto a ser conversado e o usuário responde que não deseja conversar sobre nada no momento. Este é o sinal para finalizar o atendimento.
+
 ```
-- story: selecionar novo emprestimo
+- story: escolha do assunto - sair
   steps:
-  - checkpoint: check_nome_ok
+  - checkpoint: CP0
+  - action: utter_tipo_de_antendimento
+  - intent: nenhum_assunto
+  - action: utter_despedida
+  - checkpoint: FIM
+```
+
+
+
+### Story C0_2: escolha do assunto - novo empréstimo
+
+O chatbot pergunta sobre o assunto a ser conversado , ele responde que é sobre um novo empréstimo e é direcionado para o checkpoint de inicio para novos empréstimos.
+
+```
+- story: escolha do assunto - novo empréstimo
+  steps:
+  - checkpoint: CP0
   - action: utter_tipo_de_antendimento
   - intent: emprestimo_novo
-  - checkpoint: check_emprestimo_novo
+  - checkpoint: CP1a
 ```
 
 
 
+### Story C0_3: escolha do assunto - empréstimo existente
+
+O chatbot pergunta sobre o assunto a ser conversado , ele responde que é sobre um empréstimo existente e é direcionado para o checkpoint de inicio para empréstimos existentes.
+
 ```
-- story: selecionar emprestimo existente
+- story: escolha do assunto - empréstimo existente
   steps:
-  - checkpoint: check_nome_ok
+  - checkpoint: CP0
   - action: utter_tipo_de_antendimento
   - intent: emprestimo_existente
-  - checkpoint: check_emprestimo_existente
-```
-
-
-
-
-
-#### Story 05: simular novo emprestimo
-
-Se o fluxo da conversa está posicionado no checkmark relativo ao atendimento para um novo empréstimo, o chatbot perunta ao usuário qual a finalidade do empréstimo. Isso é feito pois a finalizada impacta na taxa de juros.
-
-Para ler a finalidade para um slot é utilizado um form, e as alternativas são exibidas ao usuário por meio do utter da pergunta. Também foi utilizado um botão, mas dessa vez foi utilizado um payload com um valor diferente em cada opção no lugar de ter intents diferentes para uma delas.
-
-Caso o slot cpf ainda não esteja populado, é utilizado um form para ler este dado e em seguida, caso o slot do score de crédito não esteja populado, é chamada uma ação externa para recuperar o score por meio de um webservice.
-
-Depois disso é disparada uma ação que busca no banco de dados a taxa de juros com base no score e na finalidade do emprestimo, e assim é preenchido o slot taxa_de_juros.
-
-Em seguida é utilizado um form para ler do usuário o valor desejado para o emprestimo, assim como o número de parcelas, e com base nos dados conhecidos é chamada uma ação personalizada que calcula o valor das parcelas do emprestimo.
-
-Finalmente é exibido ao usuário os dados do emprestimos, e é registrado um checkmark que localiza o diálogo no final da simulação.
-
-```
-- story: simular novo emprestimo
-  steps:
-  - checkpoint: check_emprestimo_novo
-  - action: utter_finalidade_do_emprestimo
-  - action: form_finalidade
-  - action: get_score
-  - action: get_taxa
-  - action: calc_parcelas
-  - checkpoint: check_simulado
-```
-
-
-
-
-
-#### Stories 06 e 07 : fazer uma nova simulação ou contratar o empréstimo (finalidade: Outro motivo)
-
-Se a finalidade do emprestimo é "Outro motivo", é informado a ele que deve conversar com um atendente pois se trata de um caso diferenciado. Caso ele concorde, é realizada uma ação de transbordo e é marcado o checkmark de transbordo.
-
-```
-- story: simular novo emprestimo (outro motivo): transbordo
-  steps:
-  - checkpoint: check_emprestimo_novo
-  - action: utter_finalidade_do_emprestimo
-  - action: form_finalidade
-  - action: utter_transbordo_informacoes
-  - intent: confirmacao
-  - action: transbordo_para_informacoes
-  - checkpoint: check_transbordo
-```
-
-Caso ele não concorde, o chatbot sse despede e o atendimento é finalizado.
-
-```
-- story: simular novo emprestimo (outro motivo): finalizar
-  steps:
-  - checkpoint: check_emprestimo_novo
-  - action: utter_finalidade_do_emprestimo
-  - action: form_finalidade
-  - action: utter_transbordo_informacoes
-  - intent: negacao
-  - action: despedida
-  - checkpoint: check_nome_ok
-```
-
-
-
-
-
-#### Stories 08, 09 e 10: fazer uma nova simulação ou contratar o empréstimo
-
-Se o diálogo estiver no checkpoint de final da simulação, é perguntado ao usuário se ele deseja se ele deseja falar com um atendente para realizar o empréstimo. Caso ele concorde, é executada uma ação de transbordo para um funcionário do setor de vendas, e é marcado o checkmark de transbordo.
-
-```
-- story: transbordo para contratar o empréstimo
-  steps:
-  - checkpoint: check_simulado
-  - action: utter_contratar_emprestimo
-  - intent: confirmacao
-  - action: transbordo_para_vendas
-  - checkpoint: check_transbordo
-```
-
-Caso contrário, é perguntado ao usuário se ele quer realizar outra simulação. Escolhendo sim, o chatbot pergunta a ele o novo valor e novo prazo do empréstimo, e as parcelas são calculadas, e o resultado é exibido para ele. O checkmark continua no final da simulação.
-
-```
-- story: nova simulacao
-  steps:
-  - checkpoint: check_simulado
-  - action: utter_contratar_emprestimo
-  - intent: negacao
-  - action: form_novo_emprestimo
-  - intent: confirmacao
-  - action: get_taxa
-  - action: calc_parcelas
-  - action: utter_simulacao
-```
-
-Escolhendo não, o chatbot se despede e encerra o atendimento.
-
-```
-- story: nova simulacao: finalizar
-  steps:
-  - checkpoint: check_simulado
-  - action: utter_contratar_emprestimo
-  - intent: negacao
-  - action: form_novo_emprestimo
-  - intent: negacao
-  - action: utter_despedida
-  - checkpoint: check_nome_ok
-```
-
-
-
-#### Story 11: obter informações de um empréstimo existente, sem empréstimos no BD
-
-Caso o usuário tenha escolhido o atendimento para um empréstimo existente, é solicitado o seu cpf (caso o slot ainda não esteja populado), e em seguida este dado é utilizado em uma ação que busca em um banco de dados todos os empréstimos existentes daquele usuário.
-
-Caso não seja localizado nenhum empréstimo é oferecido ao usiário a chance de falar com um atendente humano. Se ele escolher este este caminho é disparada uma ação que realizará o transbordo para um atendente do setor de informações, e é registrado o checkpoint no transbordo.
-
-```
-- story: emprestimo existente com transbordo
-  steps:
-  - checkpoint: check_emprestimo_novo
-  - action: utter_finalidade_do_emprestimo
-  - action: form_finalidade
-  - action: get_score
-  - action: get_taxa
-  - action: calc_parcelas
-  - checkpoint: check_simulado
+  - checkpoint: CP2a
 ```
 
