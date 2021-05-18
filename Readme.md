@@ -588,7 +588,7 @@ A partir do checkpoint CP2a o usuário pode conversar sobre empréstimos existen
 ### Story CP2a_1:  usuário não foi encontrado na basse de clientes
 
 ```
-- story: contratar empréstimo simulado
+- story: usuário não foi encontrado na basse de clientes
   steps:
   - checkpoint: CP2a
   - action: form_cpf
@@ -602,10 +602,10 @@ A partir do checkpoint CP2a o usuário pode conversar sobre empréstimos existen
 
 
 
-### Story CP2a_b: o emprésstimo sobre o qual quer falar não foi localizado  
+### Story CP2a_2: o empréstimo sobre o qual quer falar não foi localizado  
 
 ```
-- story: contratar empréstimo simulado
+- story: o empréstimo sobre o qual quer falar não foi localizado
   steps:
   - checkpoint: CP2a
   - action: form_cpf
@@ -621,10 +621,10 @@ A partir do checkpoint CP2a o usuário pode conversar sobre empréstimos existen
 
 
 
-### Story CP2a_1:  obter informações sobre um empréstimo existente e que foi localizado
+### Story CP2a_3:  obter informações sobre um empréstimo existente e que foi localizado
 
 ```
-- story: contratar empréstimo simulado
+- story: obter informações sobre um empréstimo existente e que foi localizado
   steps:
   - checkpoint: CP2a
   - action: form_cpf
@@ -653,7 +653,7 @@ Este checkpoint marca o final de uma conversa sobre dúvidas sobre um exmprésti
 ### Story CP2b_1:  usuário aceita transbordo para renegociar emprestimo
 
 ```
-- story: contratar empréstimo simulado
+- story: usuário aceita transbordo para renegociar emprestimo
   steps:
   - checkpoint: CP2b
   - action: utter_renegociar_emprestimo
@@ -670,7 +670,7 @@ Este checkpoint marca o final de uma conversa sobre dúvidas sobre um exmprésti
 O usuário quer falar sobre um outro empréstimo existente que foi listado anteriormente.
 
 ```
-- story: contratar empréstimo simulado
+- story: falar sobre outro empréstimo existente
   steps:
   - checkpoint: CP2b
   - action: utter_renegociar_emprestimo
@@ -689,7 +689,7 @@ O usuário quer falar sobre um outro empréstimo existente que foi listado anter
 O usuário não quer mais falar sobre empréstimos existentes e é direcionado para C0, assim ele pode falar sobre outra coisa.
 
 ```
-- story: contratar empréstimo simulado
+- story: não quer falar sobre outros emprestimos existentes nem renegociar um deles
   steps:
   - checkpoint: CP2b
   - action: utter_novo_antendimento
