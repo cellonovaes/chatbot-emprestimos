@@ -39,7 +39,7 @@ docker-compose up
 
 Após isso o cliente estará disponível no endereço:
 ```
-http://127.0.0.1:8081
+http://127.0.0.1:8080
 ```
 
 
@@ -411,11 +411,11 @@ utter_tipo_de_antendimento:
 
 
 
-## Stories iniciando no checkpoint **C0**
+## Stories iniciando no checkpoint **CP0**
 
 Para facilitar a leitura da escolha foram utilizados botões para das suas opções, e dependendo da opção a conversa vai para o próximo checkpoint.
 
-### Story C0_1: escolha do assunto - sair
+### Story CP0_1: escolha do assunto - sair
 
 O chatbot pergunta sobre o assunto a ser conversado e o usuário responde que não deseja conversar sobre nada no momento. Este é o sinal para finalizar o atendimento.
 
@@ -431,7 +431,7 @@ O chatbot pergunta sobre o assunto a ser conversado e o usuário responde que n�
 
 
 
-### Story C0_2: escolha do assunto - novo empréstimo
+### Story CP0_2: escolha do assunto - novo empréstimo
 
 O chatbot pergunta sobre o assunto a ser conversado , ele responde que é sobre um novo empréstimo e é direcionado para o checkpoint de inicio para novos empréstimos.
 
@@ -446,7 +446,7 @@ O chatbot pergunta sobre o assunto a ser conversado , ele responde que é sobre 
 
 
 
-### Story C0_3: escolha do assunto - empréstimo existente
+### Story CP0_3: escolha do assunto - empréstimo existente
 
 O chatbot pergunta sobre o assunto a ser conversado , ele responde que é sobre um empréstimo existente e é direcionado para o checkpoint de inicio para empréstimos existentes.
 
@@ -481,7 +481,7 @@ Caso o usuário escreva "outro motivo", ou um motivo não previsto, é avisado a
 - story: escolha da finalidade do empréstimo - outro motivo
   steps:
   - checkpoint: CP1a
-  - action: form_tipo_de_antendimento
+  - action: form_finalidade_do_emprestimo
   - intent: outro_motivo
   - action: utter_aviso_transbordo
   - action: preenche_slot_transbordo_vendas
@@ -504,13 +504,13 @@ Finalmente, ele é direcionado para o checkpoint CP1b que representa o final de 
 - story: escolha da finalidade do empréstimo - outro motivo
   steps:
   - checkpoint: CP1a
-  - action: form_tipo_de_antendimento
+  - action: form_finalidade_do_empresstimo
   - action: form_cpf
   - action: ws_consulta_credito_score
   - action: bd_busca_taxa_juros
   - action: form_dados_emprestimo
   - action: gera_simulacao
-  - action: exibe_simulacao
+  - action: utter_exibe_simulacao
   - checkpoint: CP1b
 ```
 
@@ -524,7 +524,7 @@ O checkpoint CP1b representa o final de uma conversa sobre simulação ded empr�
 
 
 
-### Story CP2b_1: conversar sobre outra simulação
+### Story CP1b_1: conversar sobre outra simulação
 
 Nese caso o usuário escolhe outro valor e número de parcelas, e recebe os dados de simulação desse empréstimo.
 
@@ -536,12 +536,12 @@ Nese caso o usuário escolhe outro valor e número de parcelas, e recebe os dado
   - intent: afirmacao
   - action: form_dados_emprestimo
   - action: gera_simulacao
-  - action: exibe_simulacao
+  - action: utter_exibe_simulacao
 ```
 
 
 
-### Story CP2b_2:  o usuário não quer conversar sobre outra simulação em contratar
+### Story CP1b_2:  o usuário não quer conversar sobre outra simulação em contratar
 
 Nese caso o usuário não deseja nem contratar o empréstimo simulado e nem fazer uma nova simulação.
 
@@ -558,7 +558,7 @@ Nese caso o usuário não deseja nem contratar o empréstimo simulado e nem faze
 
 
 
-### Story CP2b_3:  contratar empréstimo simulado
+### Story CP1b_3:  contratar empréstimo simulado
 
 Nese caso o usuário deseja  contratar o empréstimo simulado, então é direcionado para o checkpoint de inicio do transbordo para o setor de vendas.
 
@@ -576,6 +576,175 @@ Nese caso o usuário deseja  contratar o empréstimo simulado, então é direcio
 ```
 
 
+
+
+
+## Stories iniciando no checkpoint **CP2a**
+
+A partir do checkpoint CP2a o usuário pode conversar sobre empréstimos existentes. Caso o sistema não encontre o empréstimo sobre ou qual deeja falar, ou o sseu registro não seja encontrado, ele tem a opção de ser encaminhado para um aterrndente humano.
+
+
+
+### Story CP2a_1:  usuário não foi encontrado na basse de clientes
+
+```
+- story: contratar empréstimo simulado
+  steps:
+  - checkpoint: CP2a
+  - action: form_cpf
+  - action: bd_busca_info_usuario
+  - action: slot{'id_usuario', null} # Precisso ver como fazer isso com o Rasa
+  - action: preenche_slot_transbordo_informacaoes
+  - checkpoint: CP3
+```
+
+
+
+
+
+### Story CP2a_b: o emprésstimo sobre o qual quer falar não foi localizado  
+
+```
+- story: contratar empréstimo simulado
+  steps:
+  - checkpoint: CP2a
+  - action: form_cpf
+  - action: bd_busca_info_usuario
+  - action: slot{'id_usuario' is set} # Precisso ver como fazer isso com o Rasa
+  - action: bd_busca_lista_emprestimos
+  - action: utter_lita_emprestimos_existentes
+  - action: utter_empretimo_esta_na_lista
+  - intent: negacao
+```
+
+
+
+### Story CP2a_1:  obter informações sobre um empréstimo existente e que foi localizado
+
+```
+- story: contratar empréstimo simulado
+  steps:
+  - checkpoint: CP2a
+  - action: form_cpf
+  - action: bd_busca_info_usuario
+  - action: slot{'id_usuario' is set} # Precisso ver como fazer isso com o Rasa
+  - action: bd_busca_lista_emprestimos
+  - action: utter_lita_emprestimos_existentes
+  - action: utter_empretimo_esta_na_lista
+  - intent: negacao
+  
+  
+  - action: utter_exibe_simulacao
+  - checkpoint: CP2b
+  
+  
+  - checkpoint: CP2b
+  - action: utter_renegociar_emprestimo
+  - intent: negacao
+  - action: utter_novo_antendimento_emprestimo_existente
+  - intent: afirmacao
+  - action: utter_lista_emprestimos
+  - action: bd_recupera_dados_emprestimo_existente
+  - action: utter_info_emprestimo_existente
+```
+
+
+
+
+
+## Stories iniciando no checkpoint **CP2b**
+
+Este checkpoint marca o final de uma conversa sobre dúvidas sobre um exmpréstimo existente. Neste ponto o usuário pode encolher entre ser encaminhado para um atendente humano e renegociar o empréstimo, falar sobre outro empréstimo existente, ou encerrar o assunto e voltar para o checkpoint CP0 para falar sobre outra coisa.
+
+
+
+### Story CP2b_1:  usuário aceita transbordo para renegociar emprestimo
+
+```
+- story: contratar empréstimo simulado
+  steps:
+  - checkpoint: CP2b
+  - action: utter_renegociar_emprestimo
+  - intent: afirmacao
+  - action: utter_aviso_transbordo
+  - action: preenche_slot_transbordo_negociacao
+  - checkpoint: CP3
+```
+
+
+
+### Story CP2b_2:  falar sobre outro empréstimo existente
+
+O usuário quer falar sobre um outro empréstimo existente que foi listado anteriormente.
+
+```
+- story: contratar empréstimo simulado
+  steps:
+  - checkpoint: CP2b
+  - action: utter_renegociar_emprestimo
+  - intent: negacao
+  - action: utter_novo_antendimento_emprestimo_existente
+  - intent: afirmacao
+  - action: utter_lista_emprestimos
+  - action: bd_recupera_dados_emprestimo_existente
+  - action: utter_info_emprestimo_existente
+```
+
+
+
+### Story CP2b_3:  não quer falar sobre outros emprestimos existentes nem renegociar um deles
+
+O usuário não quer mais falar sobre empréstimos existentes e é direcionado para C0, assim ele pode falar sobre outra coisa.
+
+```
+- story: contratar empréstimo simulado
+  steps:
+  - checkpoint: CP2b
+  - action: utter_novo_antendimento
+  - intent: negacao
+  - action: utter_contratar_emprestimo_simulado
+  - intent: negacao
+  - checkpoint: CP0
+```
+
+
+
+
+
+## Stories iniciando no checkpoint **CP3**
+
+O checkpoint CP3 marca o inicio do transbordo humano. O usuário será perguntado se deseja falar com um atendente e pode aceitar ou não. Em ambos os casos a conversa vai para o checkpoint CP0, isso permite que a conversa com o chatbot continue, mesmo em caso de transbordo.
+
+
+
+### Story CP3_1:  transbordo para atendimento humano
+
+```
+- story: o usuário não quer conversar sobre outra simulação em contratar
+  steps:
+  - checkpoint: CP3
+  - action: utter_aceita_transbordo
+  - intent: afirmacao
+  - action: executa_transbordo
+  - checkpoint: CP0
+```
+
+
+
+
+
+### Story CP3_2:  Finalizar assunto e voltar para o checkpoint C0
+
+Finalizar assunto e voltar para o checkpoint C0 para falar sobre outra coisa.
+
+```
+- story: o usuário não quer conversar sobre outra simulação em contratar
+  steps:
+  - checkpoint: CP3
+  - action: utter_aceita_transbordo
+  - intent: negacao
+  - checkpoint: CP0
+```
 
 
 
