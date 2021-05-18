@@ -587,6 +587,8 @@ A partir do checkpoint CP2a o usuário pode conversar sobre empréstimos existen
 
 ### Story CP2a_1:  usuário não foi encontrado na basse de clientes
 
+Quando o usuário não é encontrado na base de clientes, ele tem a opção de conversar com um atendente humano para descobrir o que houve.
+
 ```
 - story: usuário não foi encontrado na basse de clientes
   steps:
@@ -603,6 +605,8 @@ A partir do checkpoint CP2a o usuário pode conversar sobre empréstimos existen
 
 
 ### Story CP2a_2: o empréstimo sobre o qual quer falar não foi localizado  
+
+O usuário não encontra na lista de empréstimos aquele sobre o qual deseja conversar. Nesse caso ele será encaminhado para o setor de informações caso aceite.
 
 ```
 - story: o empréstimo sobre o qual quer falar não foi localizado
@@ -622,6 +626,8 @@ A partir do checkpoint CP2a o usuário pode conversar sobre empréstimos existen
 
 
 ### Story CP2a_3:  obter informações sobre um empréstimo existente e que foi localizado
+
+O usuário seleciona um do empréstimos na lista recuperada pelo chatbot, e recebe informações sobre ele.
 
 ```
 - story: obter informações sobre um empréstimo existente e que foi localizado
@@ -651,6 +657,8 @@ Este checkpoint marca o final de uma conversa sobre dúvidas sobre um exmprésti
 
 
 ### Story CP2b_1:  usuário aceita transbordo para renegociar emprestimo
+
+O usuário escolhe aceitar o transbordo para negociar um emprestimo existente com um atendente humano.
 
 ```
 - story: usuário aceita transbordo para renegociar emprestimo
