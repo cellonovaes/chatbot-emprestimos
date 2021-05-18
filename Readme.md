@@ -9,7 +9,7 @@
 
 Este projeto visa apresentar uma arquitetura de chatbot escalavél, flexivel e resiliente, capaz de processar um alto volume de dúvidass e estar preparado para aumentos rápidos de demanda.
 
-Devem estar contemplados o transbordo do atendimento para atendentes humanos, caso necesssário, assim como ações que requeiram a consulta à serviços externos, consulta em bases de dados, o uso de custom forms, e também a utilização de fallback actions.
+Devem estar contemplados o transbordo do atendimento para atendentes humanos, caso necessário, assim como ações que requeiram a consulta à serviços externos, consulta em bases de dados, o uso de custom forms, e também a utilização de fallback actions.
 
 O estudo de caso selecionado foi um chatbot para atendimento de uma plataforma de emprestimos online, sendo que ele deve ser capaz de sanar as principais dúvidas dos visitantes.
 
@@ -25,7 +25,7 @@ Para entender alguns termos e as modalidades de empréstimos foi consultada a pl
 
 ## <a name="instalacao"></a> Instalação e Execução
 
-Este chatbot de demonstração foi construido com base na plataforma [Rasa](https://rasa.com/), utilizando alguns recursos disponibilizados no exemplo [Financial-Demo da RasaHQ](https://github.com/RasaHQ/financial-demo), no [Rassa Boilerplate](https://github.com/lappis-unb/rasa-ptbr-boilerplate).
+Este chatbot de demonstração foi construido com base na plataforma [Rasa](https://rasa.com/), utilizando alguns recursos disponibilizados no exemplo [Financial-Demo da RasaHQ](https://github.com/RasaHQ/financial-demo), no [Rasa Boilerplate](https://github.com/lappis-unb/rasa-ptbr-boilerplate).
 
 Para testar o chatbot foi utilizado o cliente [Chatroom da RasaHQ](https://github.com/RasaHQ/chatroom). 
 
@@ -78,7 +78,7 @@ Por questões práticas de tempo e recursos esta arquitetura não foi implementa
 
 ## <a name="transbordo"></a>Alternativas para realizar o Transbordo
 
-A arquitetura desscrita possibilita algumass formas diferentes para tratar a transição do antendimento entre um chatbot e um atendente humano. A seguir serão descritas duas dela.
+A arquitetura descrita possibilita algumas formas diferentes para tratar a transição do antendimento entre um chatbot e um atendente humano. A seguir serão descritas duas dela.
 
 * Encaminhamento para outro canal
 * Realizar o atendimento híbrido no mesmo canal
@@ -101,9 +101,9 @@ Essa técnica é interessante pois possibilita liberar o canal de atendimento ao
 
 
 
-A desvantagem nessse casso fica por conta da experiência do usuário por ter que utilizar um canal adicional de comunicação, e também por conta do atendente humano perder o contexto da mensagem.
+A desvantagem nesse caso fica por conta da experiência do usuário por ter que utilizar um canal adicional de comunicação, e também por conta do atendente humano perder o contexto da mensagem.
 
-Todavia existem algumas formas de incrementar esssa abordagem, como a criação de external actions para persistir temporáriamente e enviar (ou tornar acesível) o contexto para o próximo atendente.
+Todavia existem algumas formas de incrementar essa abordagem, como a criação de external actions para persistir temporáriamente e enviar (ou tornar acesível) o contexto para o próximo atendente.
 
 
 
@@ -115,7 +115,7 @@ Essa estratégia é a que parece ressultar em melhor experiência do usuário, p
 
 <img src="readme/transbordo_02.jpg" alt="Transbordo" width="300"/><img src="readme/transbordo_03.jpg" alt="Transbordo" width="300"/>
 
-Outra vantagem é que o contexto é presenvado a cada transferência, de forma que o usuário não precissa repetir as informações para cada novo atendente.
+Outra vantagem é que o contexto é presenvado a cada transferência, de forma que o usuário não precisa repetir as informações para cada novo atendente.
 
 Todavia é uma estratégia mais difícil de implementar pois exige um maior grau de integração e customização dos componentes.
 
@@ -385,7 +385,7 @@ Os checkpoints serão:
 
 A imagem a seguir ilustra o fluxo da conversa durante a execução do chatbot. Vale resaltar que na imagem não estão representadas as exeções ou ações de fallback, apenas a visão geral dos possíveis fluxos normais da conversa.
 
-Os checkpoints podem facilitar conssideravelmente o controle do floco da conversa. Foram inseridos alguns desses checkpoints no fluxo do diálogo, porém a posição deles pode melhorar, e também podem ser definidos novos checkpoints.
+Os checkpoints podem facilitar consideravelmente o controle do floco da conversa. Foram inseridos alguns desses checkpoints no fluxo do diálogo, porém a posição deles pode melhorar, e também podem ser definidos novos checkpoints.
 
 <img src="readme/dialog_workflow.png" alt="Diálogos" width="800"/>
 
