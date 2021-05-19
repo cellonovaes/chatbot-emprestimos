@@ -640,7 +640,6 @@ O usuário não encontra na lista de empréstimos aquele sobre o qual deseja con
   - action: form_cpf
   - action: bd_busca_info_usuario
   - action: bd_busca_lista_emprestimos
-  - action: utter_lista_emprestimos_existentes
   - action: utter_emprestimo_esta_na_lista
   - intent: negar
   - action: preenche_slot_transbordo_informacoes
@@ -661,7 +660,6 @@ O usuário seleciona um do empréstimos na lista recuperada pelo chatbot, e rece
   - action: bd_busca_info_usuario
   - action: slot{'id_usuario' is set} 
   - action: bd_busca_lista_emprestimos
-  - action: utter_lista_emprestimos_existentes
   - action: utter_empretimo_esta_na_lista
   - intent: afirmar
   - action: form_seleciona_emprestimo
