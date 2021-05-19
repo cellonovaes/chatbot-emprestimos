@@ -95,7 +95,6 @@ stories:
   - action: form_cpf
   - action: bd_busca_info_usuario
   - action: bd_busca_lista_emprestimos
-  - action: utter_lista_emprestimos_existentes
   - action: utter_emprestimo_esta_na_lista
   - intent: negar
   - action: preenche_slot_transbordo_informacoes
