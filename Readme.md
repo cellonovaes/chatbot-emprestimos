@@ -648,6 +648,8 @@ O usuário não encontra na lista de empréstimos aquele sobre o qual deseja con
 
 
 
+
+
 ### Story CP2a_3:  obter informações sobre um empréstimo existente e que foi localizado
 
 O usuário seleciona um do empréstimos na lista recuperada pelo chatbot, e recebe informações sobre ele.
