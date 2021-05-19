@@ -86,8 +86,7 @@ stories:
   - checkpoint: CP2a
   - action: form_cpf
   - action: bd_busca_info_usuario
-  - action: slot{'id_usuario', null}
-  - action: preenche_slot_transbordo_informacaoes
+  - action: preenche_slot_transbordo_informacoes
   - checkpoint: CP3
 
 - story: CP2a_2 - o empréstimo sobre o qual quer falar não foi localizado
@@ -95,12 +94,11 @@ stories:
   - checkpoint: CP2a
   - action: form_cpf
   - action: bd_busca_info_usuario
-  #- action: slot{'id_usuario' is set}
   - action: bd_busca_lista_emprestimos
-  - action: utter_lita_emprestimos_existentes
+  - action: utter_lista_emprestimos_existentes
   - action: utter_emprestimo_esta_na_lista
   - intent: negar
-  - action: preenche_slot_transbordo_informacaoes
+  - action: preenche_slot_transbordo_informacoes
   - checkpoint: CP3
 
 - story: CP2a_3 - obter informações sobre um empréstimo existente e que foi localizado
@@ -122,7 +120,7 @@ stories:
   - action: utter_renegociar_emprestimo
   - intent: afirmar
   - action: utter_aviso_transbordo
-  - action: preenche_slot_transbordo_negociacao
+  - action: preenche_slot_transbordo_negociacoes
   - checkpoint: CP3
 
 - story: Story CP2b_2 - falar sobre outro empréstimo existente
@@ -132,9 +130,10 @@ stories:
   - intent: negar
   - action: utter_novo_antendimento_emprestimo_existente
   - intent: afirmar
-  - action: utter_lista_emprestimos
+  - action: bd_busca_lista_emprestimos
+  - action: form_seleciona_emprestimo
   - action: bd_recupera_dados_emprestimo_existente
-  - action: utter_info_emprestimo_existente
+  - checkpoint: CP2b
 
 - story: Story CP2b_3 -  não quer falar sobre outros emprestimos existentes nem renegociar um deles
   steps:

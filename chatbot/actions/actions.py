@@ -5,6 +5,19 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 
 
+class EXECUTAR_TRANSBORDO(Action):
+    def name(self) -> Text:
+        return "executa_transbordo"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        msg = "Direcionando atendimento para um atendente."
+        dispatcher.utter_message(text=msg)
+        return []
+
+
 class BD_RECUPERA_DADOS_EMPRESTIMO_EXISTENTE(Action):
     def name(self) -> Text:
         return "bd_recupera_dados_emprestimo_existente"
@@ -20,6 +33,7 @@ class BD_RECUPERA_DADOS_EMPRESTIMO_EXISTENTE(Action):
         dispatcher.utter_message(text=msg)
         return []
 
+
 class PREENCHE_SLOT_TRANSBORDO_NEGOCIACOES(Action):
     def name(self) -> Text:
         return "preenche_slot_transbordo_negociacoes"
@@ -29,6 +43,7 @@ class PREENCHE_SLOT_TRANSBORDO_NEGOCIACOES(Action):
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         tracker.set_slot("slot_setor", "negociacoes")
         return []
+
 
 class PREENCHE_SLOT_TRANSBORDO_INFORMACOES(Action):
     def name(self) -> Text:
@@ -40,15 +55,6 @@ class PREENCHE_SLOT_TRANSBORDO_INFORMACOES(Action):
         tracker.set_slot("slot_setor", "informacoes")
         return []
 
-class PREENCHE_SLOT_TRANSBORDO_NEGOCIACOES(Action):
-    def name(self) -> Text:
-        return "preenche_slot_transbordo_negociacoes"
-
-    def run(self, dispatcher: CollectingDispatcher,
-            tracker: Tracker,
-            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        tracker.set_slot("slot_setor", "negociacoes")
-        return []
 
 class PREENCHE_SLOT_TRANSBORDO_VENDAS(Action):
     def name(self) -> Text:
@@ -59,6 +65,7 @@ class PREENCHE_SLOT_TRANSBORDO_VENDAS(Action):
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         tracker.set_slot("slot_setor", "vendas")
         return []
+
 
 class WS_CONSULTA_CREDITO_SCORE(Action):
     def name(self) -> Text:
@@ -83,6 +90,7 @@ class BD_BUSCA_TAXA_JUROS(Action):
         dispatcher.utter_message(text=taxa)
         return []
 
+
 class GERA_SIMULACAO(Action):
     def name(self) -> Text:
         return "gera_simulacao"
@@ -90,7 +98,7 @@ class GERA_SIMULACAO(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        parcela = "1500"
+        parcela = "O valor de cada parcela será de 1500 reais"
         dispatcher.utter_message(text=parcela)
         return []
 

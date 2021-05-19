@@ -621,8 +621,7 @@ Quando o usuário não é encontrado na base de clientes, ele tem a opção de c
   - checkpoint: CP2a
   - action: form_cpf
   - action: bd_busca_info_usuario
-  - action: slot{'id_usuario', null}
-  - action: preenche_slot_transbordo_informacaoes
+  - action: preenche_slot_transbordo_informacoes
   - checkpoint: CP3
 ```
 
@@ -640,12 +639,11 @@ O usuário não encontra na lista de empréstimos aquele sobre o qual deseja con
   - checkpoint: CP2a
   - action: form_cpf
   - action: bd_busca_info_usuario
-  - action: slot{'id_usuario' is set}
   - action: bd_busca_lista_emprestimos
-  - action: utter_lita_emprestimos_existentes
+  - action: utter_lista_emprestimos_existentes
   - action: utter_emprestimo_esta_na_lista
   - intent: negar
-  - action: preenche_slot_transbordo_informacaoes
+  - action: preenche_slot_transbordo_informacoes
   - checkpoint: CP3
 ```
 
@@ -710,9 +708,10 @@ O usuário quer falar sobre um outro empréstimo existente que foi listado anter
   - intent: negar
   - action: utter_novo_antendimento_emprestimo_existente
   - intent: afirmar
-  - action: utter_lista_emprestimos
+  - action: bd_busca_lista_emprestimos
+  - action: form_seleciona_emprestimo
   - action: bd_recupera_dados_emprestimo_existente
-  - action: utter_info_emprestimo_existente
+  - checkpoint: CP2b
 ```
 
 

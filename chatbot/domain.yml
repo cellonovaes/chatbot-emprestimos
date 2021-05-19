@@ -144,6 +144,11 @@ responses:
   utter_empretimo_esta_na_lista:
     - text: O emprestimo sobre o qual você deseja falar está na lista?
 
+  utter_renegociar_emprestimo:
+    - text: Deseja renegociar este emprestimo?
+
+  utter_novo_antendimento_emprestimo_existente:
+    - text: Deseja conversar sobre outro empréstimo?
 
   utter_finalidade_do_emprestimo:
   - buttons:
@@ -180,6 +185,8 @@ actions:
 - preenche_slot_transbordo_vendas
 - bd_recupera_dados_emprestimo_existente
 - bd_busca_info_usuario
+- bd_busca_lista_emprestimos
+- executa_transbordo
 forms:
   form_seleciona_emprestimo:
     required_slots:
